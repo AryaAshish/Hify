@@ -9,7 +9,7 @@
     android:background="@color/colorPrimary"
     tools:context="com.amsavarthan.hify.ui.activities.ProfileView">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/appbar"
         android:orientation="horizontal"
         android:padding="5dp"
@@ -18,24 +18,41 @@
         android:layout_height="wrap_content">
 
         <de.hdodenhof.circleimageview.CircleImageView
+           android:id="@+id/logo"
             android:layout_width="40dp"
             android:src="@mipmap/logo"
             android:layout_marginLeft="10dp"
             android:layout_height="40dp" />
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:gravity="center_vertical"
             android:text="My Profile"
             fontPath="fonts/bold.ttf"
             android:textColor="#212121"
             android:textSize="22sp"
             tools:ignore="MissingPrefix" />
 
-    </LinearLayout>
+        <ImageView
+            android:layout_marginRight="10dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_exit_to_app_black_24dp"
+            android:layout_gravity="end"
+            android:id="@+id/logout"
+            android:padding="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="logout"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true" />
 
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/layout"
@@ -94,6 +111,7 @@
             android:drawableStart="@drawable/ic_local_phone_black_24dp"
             android:gravity="center_horizontal"
             android:textColor="#212121"
+            android:text=""
             android:textSize="17sp" />
 
         <TextView
@@ -109,11 +127,9 @@
             android:drawableStart="@drawable/ic_group_black_24dp"
             android:gravity="center_horizontal"
             android:textColor="#212121"
-            android:textSize="20sp" />
-
+            android:text="Total Friends: "
+            android:textSize="17sp" />
 
     </RelativeLayout>
-
-
 
 </RelativeLayout>

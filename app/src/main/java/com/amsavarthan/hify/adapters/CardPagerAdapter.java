@@ -2,7 +2,6 @@ package com.amsavarthan.hify.adapters;
 
 import android.app.Activity;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
@@ -11,17 +10,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
+import com.amsavarthan.hify.ui.activities.AddFriends;
 import com.amsavarthan.hify.MessagesView;
 import com.amsavarthan.hify.ui.activities.FriendsView;
+import com.amsavarthan.hify.ui.activities.FriendsViewForMessage;
 import com.amsavarthan.hify.utils.CardAdapter;
 import com.amsavarthan.hify.ui.activities.ProfileView;
 import com.amsavarthan.hify.R;
 import com.amsavarthan.hify.models.CardItem;
-import com.amsavarthan.hify.ui.activities.FragmentHolder;
 import com.amsavarthan.hify.ui.activities.ProfileEdit;
 
 import java.util.ArrayList;
@@ -121,12 +118,11 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
                     // FragmentHolder.startActivity(view.getContext(),"v_friends",cardView,activity,item.getmImageResource(),item.getmColorResource());
                 }
             });
-        }else if(item.getmButtonText1().equals("View Messages")){
+        }else if(item.getmButtonText1().equals("Send a message")){
             button1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    MessagesView.startActivity(view.getContext());
-                    //FragmentHolder.startActivity(view.getContext(),"v_messages",cardView,activity,item.getmImageResource(),item.getmColorResource());
+                    FriendsViewForMessage.startActivity(view.getContext());
                 }
             });
         }
@@ -143,31 +139,15 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
             button2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    FriendsView.startActivity(view.getContext());
-                    //AddFriends.startActivity(view.getContext());
+                    AddFriends.startActivity(view.getContext());
                 }
             });
-        }else if(item.getmButtonText2().equals("Clear Message History")){
+        }else if(item.getmButtonText2().equals("View Messages")){
+            button2.setVisibility(View.GONE);
             button2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
-                    new MaterialDialog.Builder(view.getContext())
-                            .title("Clear Messages")
-                            .content("Are you sure do you want to clear your message history?")
-                            .positiveText("Yeah!")
-                            .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                    Toast.makeText(view.getContext(), "History cleared", Toast.LENGTH_SHORT).show();
-                                    dialog.dismiss();
-                                }
-                            }).negativeText("Nope")
-                            .onNegative(new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                    dialog.dismiss();
-                                }
-                            }).show();
+                    //MessagesView.startActivity(view.getContext());
                 }
             });
         }

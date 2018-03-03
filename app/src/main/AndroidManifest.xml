@@ -118,8 +118,16 @@
         <activity
             android:name=".ui.activities.ProfileView"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.activities.FriendsView" />
-        <activity android:name=".MessagesView"></activity>
+        <activity
+            android:name=".ui.activities.FriendsViewForMessage"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MessagesView"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.AddFriends"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.activities.FriendsView"></activity>
     </application>
 
 </manifest>

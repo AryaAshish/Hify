@@ -5,8 +5,10 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,8 +17,17 @@ import com.amsavarthan.hify.R;
 import com.amsavarthan.hify.utils.database.UserHelper;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -82,6 +93,13 @@ public class ProfileView extends AppCompatActivity {
         friends = (TextView) findViewById(R.id.friends);
         profilePic = (CircleImageView) findViewById(R.id.profile_pic);
 
+        mFirestore.collection("Users").document(mAuth.getCurrentUser().getUid()).collection("Friends").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot documentSnapshots) {
+                friends.setText(String.format("Total Friends: %d", documentSnapshots.size()));
+            }
+        });
+
         profilePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -121,5 +139,26 @@ public class ProfileView extends AppCompatActivity {
                 .setDuration(500)
                 .translationY(mRelativeLayout.getHeight())
                 .alpha(1.0f);
+    }
+
+    public void logout(View view) {
+
+        Map<String,Object> tokenRemove=new HashMap<>();
+        tokenRemove.put("token_id","");
+
+        mFirestore.collection("Users").document(mAuth.getCurrentUser().getUid()).update(tokenRemove).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                mAuth.signOut();
+                MainActivity.activity.finish();
+                finish();
+                LoginActivity.startActivity(ProfileView.this);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("Error",e.getMessage());
+            }
+        });
     }
 }

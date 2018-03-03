@@ -38,6 +38,10 @@ import java.util.concurrent.TimeUnit;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
+import static com.amsavarthan.hify.ui.activities.RegisterActivity.email_;
+import static com.amsavarthan.hify.ui.activities.RegisterActivity.name_;
+import static com.amsavarthan.hify.ui.activities.RegisterActivity.phonenumber;
+
 public class PhoneVerifyActivity extends AppCompatActivity {
 
     private static final String TAG = "PhoneVerifyActivity";
@@ -79,7 +83,7 @@ public class PhoneVerifyActivity extends AppCompatActivity {
         progressText=(TextView)findViewById(R.id.progressText);
         userHelper=new UserHelper(this);
 
-        phone.setText(RegisterActivity.phonenumber);
+        phone.setText(phonenumber);
         progressText.setText("Waiting to automatically verify..");
         sendCode();
 
@@ -97,7 +101,7 @@ public class PhoneVerifyActivity extends AppCompatActivity {
         setUpVerificatonCallbacks();
 
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                RegisterActivity.phonenumber,
+                phonenumber,
                 20,
                 TimeUnit.SECONDS,
                 this,
@@ -174,7 +178,7 @@ public class PhoneVerifyActivity extends AppCompatActivity {
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
 
-        mAuth.createUserWithEmailAndPassword(RegisterActivity.email_, RegisterActivity.pass_).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        mAuth.createUserWithEmailAndPassword(email_, RegisterActivity.pass_).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
@@ -192,16 +196,17 @@ public class PhoneVerifyActivity extends AppCompatActivity {
                                 String token_id= FirebaseInstanceId.getInstance().getToken();
 
                                 Map<String,Object> userMap=new HashMap<>();
-                                userMap.put("name", RegisterActivity.name_);
+                                userMap.put("name", name_);
                                 userMap.put("image",downloadUri);
+                                userMap.put("email",email_);
                                 userMap.put("token_id",token_id);
-                                userMap.put("phone", RegisterActivity.phonenumber);
+                                userMap.put("phone", phonenumber);
 
                                 firebaseFirestore.collection("Users").document(userUid).set(userMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         MainActivity.startActivity(PhoneVerifyActivity.this);
-                                        userHelper.insertContact(RegisterActivity.name_,RegisterActivity.phonenumber,RegisterActivity.email_,downloadUri);
+                                        userHelper.insertContact(name_, phonenumber, email_,downloadUri);
                                         RegisterActivity.mBar.setVisibility(View.INVISIBLE);
                                         finish();
                                     }
@@ -235,7 +240,7 @@ public class PhoneVerifyActivity extends AppCompatActivity {
         setUpVerificatonCallbacks();
 
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                RegisterActivity.phonenumber,
+                phonenumber,
                 20,
                 TimeUnit.SECONDS,
                 this,

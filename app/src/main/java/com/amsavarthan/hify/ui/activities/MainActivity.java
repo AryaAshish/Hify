@@ -15,7 +15,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.amsavarthan.hify.Manifest;
 import com.amsavarthan.hify.R;
 import com.amsavarthan.hify.adapters.CardPagerAdapter;
 import com.amsavarthan.hify.adapters.PagerViewAdapter;
@@ -34,6 +36,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.DialogOnDeniedPermissionListener;
+import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -75,9 +84,14 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         if(currentuser!=null)
         {
-            performUploadTask();
+            try {
+                performUploadTask();
+            }catch (Exception e){
+                Log.e("Error","."+e.getLocalizedMessage());
+            }
+        }else{
+            LoginActivity.startActivity(this);
         }
-        Log.i("onStart","MainActivity");
     }
 
     @Override
@@ -103,10 +117,30 @@ public class MainActivity extends AppCompatActivity {
         if(currentuser==null){
             LoginActivity.startActivity(MainActivity.this);
         }else {
-            userId = currentuser.getUid();
-            storageReference = FirebaseStorage.getInstance().getReference().child("images").child(currentuser.getUid() + ".jpg");
-            ;
 
+            Dexter.withActivity(this)
+                    .withPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    .withListener(new PermissionListener() {
+                        @Override
+                        public void onPermissionGranted(PermissionGrantedResponse response) {
+
+                        }
+
+                        @Override
+                        public void onPermissionDenied(PermissionDeniedResponse response) {
+                            Toast.makeText(MainActivity.this, "We need storage permission for downloading images, please grant it from settings", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+
+                        }
+                    });
+
+            userId = currentuser.getUid();
+            storageReference = FirebaseStorage.getInstance().getReference().child("images").child(currentuser.getUid() + ".jpg");;
+
+            performLogintask();
 
             mainpager = (ViewPager) findViewById(R.id.mainpager);
             profileLabel = (ImageView) findViewById(R.id.profileLabel);
@@ -117,16 +151,20 @@ public class MainActivity extends AppCompatActivity {
             mCardAdapter = new CardPagerAdapter(this);
             mCardAdapter.addCardItem(new CardItem(R.string.posts, R.string.text_1, R.mipmap.feed_white, "#3cba54", "View Feed", "Add a new post" ));
             mCardAdapter.addCardItem(new CardItem(R.string.friends, R.string.text_1, R.mipmap.friends, "#4885ed", "My Friends", "Add a Friend"));
-            mCardAdapter.addCardItem(new CardItem(R.string.messages, R.string.text_1, R.mipmap.message, "#db3236", "View Messages", "Clear Message History"));
+            mCardAdapter.addCardItem(new CardItem(R.string.messages, R.string.text_1, R.mipmap.message, "#db3236", "Send a message", "View Messages"));
             mCardAdapter.addCardItem(new CardItem(R.string.profile, R.string.text_1, R.mipmap.profile, "#f4c20d", "View Profile", "Edit Profile"));
 
-            performUploadTask();
+            try {
+                performUploadTask();
+            }catch (Exception e){
+                Log.e("Error","."+e.getLocalizedMessage());
+            }
 
             mCardShadowTransformer = new Transformer(mainpager, mCardAdapter);
 
             mainpager.setAdapter(mCardAdapter);
             mainpager.setPageTransformer(false, mCardShadowTransformer);
-            mainpager.setOffscreenPageLimit(2);
+            mainpager.setOffscreenPageLimit(3);
 
         }
         /*
@@ -151,6 +189,37 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         */
+
+    }
+
+    private void performLogintask() {
+
+        Cursor rs=userHelper.getData(1);
+        rs.moveToFirst();
+
+        String nam = rs.getString(rs.getColumnIndex(UserHelper.CONTACTS_COLUMN_NAME));
+
+        if(!rs.isClosed())
+            rs.close();
+
+        if(nam==null) {
+            FirebaseFirestore.getInstance().collection("Users").document(currentuser.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    userHelper.insertContact(
+                            documentSnapshot.getString("name")
+                            ,documentSnapshot.getString("phone")
+                            ,documentSnapshot.getString("email")
+                            ,documentSnapshot.getString("image")
+                    );
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e("Error",".."+e.getMessage());
+                }
+            });
+        }
 
     }
 

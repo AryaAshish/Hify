@@ -26,6 +26,13 @@ import com.amsavarthan.hify.R;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.github.chrisbanes.photoview.PhotoView;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.DialogOnDeniedPermissionListener;
+import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -127,15 +134,41 @@ public class ImagePreviewSave extends AppCompatActivity {
 
     public void saveImage(View view) {
 
-        if(isOnline()) {
-            if (!TextUtils.isEmpty(intent_URI)) {
-                downloadImage(intent_URI);
-            } else {
-                downloadImage(intent_URL);
-            }
-        }else{
-            Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show();
-        }
+        Dexter.withActivity(this)
+                .withPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .withListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse response) {
+                        if(isOnline()) {
+                            if (!TextUtils.isEmpty(intent_URI)) {
+                                downloadImage(intent_URI);
+                            } else {
+                                downloadImage(intent_URL);
+                            }
+                        }else{
+                            Toast.makeText(ImagePreviewSave.this, "No internet connection", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse response) {
+                        if(response.isPermanentlyDenied()){
+                            PermissionListener dialogPermissionListener =
+                                    DialogOnDeniedPermissionListener.Builder
+                                            .withContext(ImagePreviewSave.this)
+                                            .withTitle("Storage permission")
+                                            .withMessage("Storage permission is needed for downloading images.")
+                                            .withButtonText(android.R.string.ok)
+                                            .withIcon(R.mipmap.logo)
+                                            .build();
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+
+                    }
+                }).check();
 
     }
 
