@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Hify</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="Welcome_message">Welcome to Hify - Flash Messenger</string>
+    <string name="register_message">Create a new Account</string>
+    <string name="loading_name">Loading Name...</string>
+
+    <string name="api_key">AIzaSyCJ7pGLnoyTiBF8_2tr6oKA0wzeKzR0FcY</string>
+
+    <string name="default_notification_channel_id">@string/app_name</string>
+    <string name="loading_message">Getting Message..</string>
+    <string name="verify_your_mobile">Verify your Mobile</string>
+    <string name="title_1">Title</string>
+    <string name="text_1">Dummy text</string>
+    <string name="messages">Messages</string>
+    <string name="friends">Friends</string>
+    <string name="profile">My Profile</string>
+    <string name="posts">Posts</string>
+
+</resources>

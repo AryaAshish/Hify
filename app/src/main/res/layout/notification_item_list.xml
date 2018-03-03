@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="15dp"
+    android:clickable="true"
+    android:background="@color/colorPrimary"
+    android:foreground="?attr/selectableItemBackground"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:focusable="true">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/image"
+        android:layout_width="60dp"
+        app:civ_border_color="@color/colorPrimary"
+        app:civ_border_width="1dp"
+        android:src="@mipmap/profile_black"
+        android:layout_height="60dp" />
+
+   <LinearLayout
+       android:orientation="vertical"
+       android:layout_marginStart="15dp"
+       android:layout_centerInParent="true"
+       android:layout_toEndOf="@+id/image"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_marginLeft="15dp"
+       android:layout_toRightOf="@+id/image">
+
+       <TextView
+           android:textSize="16sp"
+           android:id="@+id/name"
+           android:textColor="#212121"
+           android:fontFamily="@font/nunito_semibold"
+           android:text="@string/loading_name"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content" />
+
+       <TextView
+           android:id="@+id/message"
+           android:fontFamily="@font/nunito_semibold"
+           android:text="@string/loading_message"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content" />
+
+   </LinearLayout>
+
+</RelativeLayout>
