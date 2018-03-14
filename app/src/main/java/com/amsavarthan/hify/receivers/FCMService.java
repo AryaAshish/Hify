@@ -43,7 +43,7 @@ public class FCMService extends FirebaseMessagingService {
         String from_id = remoteMessage.getData().get("from_id");
         final String imageUrl = remoteMessage.getData().get("image");
         String reply_for = remoteMessage.getData().get("reply_for");
-        String id = String.valueOf(remoteMessage.getData().get("notification_id"));
+        long id = Long.parseLong(remoteMessage.getData().get("notification_id"));
         String timeStamp = String.valueOf(remoteMessage.getData().get("timestamp"));
 
         //Friend Request Notification data
@@ -101,16 +101,16 @@ public class FCMService extends FirebaseMessagingService {
         if (TextUtils.isEmpty(imageUrl)) {
 
             if (!TextUtils.isEmpty(from_image)) {
-                showNotificationMessage(Integer.valueOf(id), timeStamp, click_action, cName, cDesc, from_image, getApplicationContext(), title, body, resultIntent);
+                showNotificationMessage((int) id, timeStamp, click_action, cName, cDesc, from_image, getApplicationContext(), title, body, resultIntent);
             } else {
-                showNotificationMessage(Integer.valueOf(id), timeStamp, click_action, cName, cDesc, friend_image, getApplicationContext(), title, body, resultIntent);
+                showNotificationMessage((int) id, timeStamp, click_action, cName, cDesc, friend_image, getApplicationContext(), title, body, resultIntent);
             }
         } else {
             // image is present, show notification with image
             if (!TextUtils.isEmpty(from_image)) {
-                showNotificationMessageWithBigImage(Integer.valueOf(id), timeStamp, click_action, cName, cDesc, from_image, getApplicationContext(), title, body, resultIntent, imageUrl);
+                showNotificationMessageWithBigImage((int) id, timeStamp, click_action, cName, cDesc, from_image, getApplicationContext(), title, body, resultIntent, imageUrl);
             } else {
-                showNotificationMessageWithBigImage(Integer.valueOf(id), timeStamp, click_action, cName, cDesc, friend_image, getApplicationContext(), title, body, resultIntent, imageUrl);
+                showNotificationMessageWithBigImage((int) id, timeStamp, click_action, cName, cDesc, friend_image, getApplicationContext(), title, body, resultIntent, imageUrl);
             }
         }
 

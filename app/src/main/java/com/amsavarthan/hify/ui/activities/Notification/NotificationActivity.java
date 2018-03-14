@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import com.amsavarthan.hify.R;
 import com.amsavarthan.hify.ui.activities.SendActivity;
-import com.amsavarthan.hify.utils.NotificationUtil;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -55,7 +54,6 @@ public class NotificationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
 
-        NotificationUtil.clearNotificationsById(this, Integer.valueOf(getIntent().getStringExtra("notification_id")));
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/regular.ttf")

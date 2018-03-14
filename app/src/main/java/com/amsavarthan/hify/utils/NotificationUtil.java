@@ -205,7 +205,6 @@ public class NotificationUtil {
 
         Notification notification;
 
-
         notification = mBuilder.setSmallIcon(icon).setTicker(title).setWhen(0)
                 .setAutoCancel(true)
                 .setContentTitle(title)
