@@ -34,6 +34,10 @@ A new type of messenger. This app is still in **beta** and lacks some features.
 * Messages
   - Send group messages **(unstable)**
 
+## Screenshots
+
+....
+
 ## Credits
 
 Logo designed by Live Mail Team from Uplabs.com
