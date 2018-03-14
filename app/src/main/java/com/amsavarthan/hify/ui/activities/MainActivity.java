@@ -99,28 +99,6 @@ public class MainActivity extends AppCompatActivity {
         context.startActivity(intent);
     }
 
-    public static void setLightStatusBar(View view, Activity activity) {
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-            int flags = view.getSystemUiVisibility();
-            flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-            view.setSystemUiVisibility(flags);
-            activity.getWindow().setStatusBarColor(Color.WHITE);
-        }
-    }
-
-    public static void clearLightStatusBar(Activity activity, View view) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-            Window window = activity.getWindow();
-            window.setStatusBarColor(ContextCompat
-                    .getColor(activity, R.color.colorPrimaryDark));
-
-        }
-    }
-
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -153,8 +131,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Log.e("timeMills", String.valueOf(System.currentTimeMillis()));
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/regular.ttf")
@@ -208,7 +184,6 @@ public class MainActivity extends AppCompatActivity {
 
             //mPagerViewAdapter=new PagerViewAdapter(getSupportFragmentManager());
             mCardAdapter = new CardPagerAdapter(this);
-            mCardAdapter.addCardItem(new CardItem(R.string.posts, R.string.text_1, R.mipmap.feed_white, "#3cba54", "View Feed", "Add a new post" ));
             mCardAdapter.addCardItem(new CardItem(R.string.messages, R.string.text_1, R.mipmap.message, "#db3236", "Send a message", "View Messages"));
             mCardAdapter.addCardItem(new CardItem(R.string.friends, R.string.text_1, R.mipmap.friends, "#4885ed", "My Friends", "Add a Friend"));
             mCardAdapter.addCardItem(new CardItem(R.string.profile, R.string.text_1, R.mipmap.profile, "#f4c20d", "View Profile", "Edit Profile"));
