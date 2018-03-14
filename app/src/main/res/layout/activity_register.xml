@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
-    android:background="@color/colorPrimary"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     tools:context=".ui.activities.RegisterActivity">
 
     <RelativeLayout
@@ -38,7 +38,6 @@
 
         <EditText
             android:id="@+id/name"
-            android:inputType="textPersonName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/profile_image"
@@ -49,41 +48,20 @@
             android:background="@drawable/input_backgtound"
             android:ems="10"
             android:hint="Name"
+            android:inputType="textPersonName"
             android:paddingBottom="15dp"
             android:paddingEnd="25dp"
             android:paddingLeft="25dp"
             android:paddingRight="25dp"
             android:paddingStart="25dp"
-            android:paddingTop="15dp" />
-
-        <EditText
-            android:id="@+id/phone"
-            android:inputType="phone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/name"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/input_backgtound"
-            android:ems="10"
-            android:hint="Phone with country code"
-            android:paddingBottom="15dp"
-            android:paddingEnd="25dp"
-            android:paddingLeft="25dp"
-            android:paddingRight="25dp"
-            android:paddingStart="25dp"
-            android:paddingTop="15dp" />
-
-
+            android:paddingTop="15dp"
+            android:textColor="@color/colorPrimary" />
 
         <EditText
             android:id="@+id/email"
-            android:inputType="textEmailAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/phone"
+            android:layout_below="@+id/name"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
@@ -91,15 +69,16 @@
             android:background="@drawable/input_backgtound"
             android:ems="10"
             android:hint="Email"
+            android:inputType="textEmailAddress"
             android:paddingBottom="15dp"
             android:paddingEnd="25dp"
             android:paddingLeft="25dp"
             android:paddingRight="25dp"
             android:paddingStart="25dp"
-            android:paddingTop="15dp" />
+            android:paddingTop="15dp"
+            android:textColor="@color/colorPrimary" />
 
         <EditText
-            android:inputType="textPassword"
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -111,12 +90,14 @@
             android:background="@drawable/input_backgtound"
             android:ems="10"
             android:hint="Password"
+            android:inputType="textPassword"
             android:paddingBottom="15dp"
             android:paddingEnd="25dp"
             android:paddingLeft="25dp"
             android:paddingRight="25dp"
             android:paddingStart="25dp"
-            android:paddingTop="15dp" />
+            android:paddingTop="15dp"
+            android:textColor="@color/colorPrimary" />
 
         <Button
             android:id="@+id/button"
@@ -133,33 +114,6 @@
             android:textAllCaps="false"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="16sp" />
-
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/button"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="40dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/border_button"
-            android:fontFamily="@font/nunito_semibold"
-            android:text="Back to Login"
-            android:textAllCaps="false"
-            android:textColor="#2591FC"
-            android:textSize="16sp" />
-
-        <ProgressBar
-            android:id="@+id/progressBar3"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:indeterminate="true"
-            android:visibility="invisible" />
 
     </RelativeLayout>
 

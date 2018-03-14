@@ -3,9 +3,9 @@ package com.amsavarthan.hify.ui.activities.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.amsavarthan.hify.R;
 import com.amsavarthan.hify.ui.activities.ImagePreview;
 import com.amsavarthan.hify.ui.activities.SendActivity;
+import com.amsavarthan.hify.utils.NotificationUtil;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -67,6 +68,7 @@ public class NotificationImageReply extends AppCompatActivity {
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
+        NotificationUtil.clearNotificationsById(this, Integer.valueOf(getIntent().getStringExtra("notification_id")));
 
         nameTxt=(TextView)findViewById(R.id.name);
         messageTxt=(TextView)findViewById(R.id.messagetxt);
@@ -150,6 +152,8 @@ public class NotificationImageReply extends AppCompatActivity {
                     notificationMessage.put("reply_for",msg);
                     notificationMessage.put("message",message_);
                     notificationMessage.put("from",current_id);
+                    notificationMessage.put("notification_id", String.valueOf(System.currentTimeMillis()));
+                    notificationMessage.put("timestamp", String.valueOf(System.currentTimeMillis()));
 
                     mFirestore.collection("Users/"+user_id+"/Notifications_reply").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                         @Override
@@ -175,6 +179,7 @@ public class NotificationImageReply extends AppCompatActivity {
         });
 
     }
+
 
     public void SendNew(View view) {
 

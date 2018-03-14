@@ -9,42 +9,44 @@
 
     <RelativeLayout
            android:id="@+id/appbar"
-           android:orientation="horizontal"
-           android:padding="5dp"
-           android:layout_marginTop="5dp"
            android:layout_width="match_parent"
-           android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        android:padding="5dp">
 
-           <de.hdodenhof.circleimageview.CircleImageView
+        <ImageView
                android:id="@+id/logo"
                android:layout_width="40dp"
-               android:src="@mipmap/logo"
-               android:layout_marginLeft="10dp"
                android:layout_height="40dp"
-               android:layout_marginStart="10dp" />
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:src="@mipmap/logo"
+            android:transitionName="@string/transition_name" />
 
            <TextView
                android:id="@+id/title"
-               android:layout_toRightOf="@+id/logo"
+               fontPath="fonts/bold.ttf"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
+               android:layout_centerVertical="true"
                android:layout_marginLeft="10dp"
+               android:layout_marginStart="10dp"
+               android:layout_toRightOf="@+id/logo"
                android:gravity="center_vertical"
                android:text="@string/app_name"
-               fontPath="fonts/bold.ttf"
                android:textColor="#212121"
                android:textSize="22sp"
-               android:layout_centerVertical="true"
-               tools:ignore="MissingPrefix"
-               android:layout_marginStart="10dp" />
+               tools:ignore="MissingPrefix" />
 
         <com.rd.PageIndicatorView
-            android:layout_alignParentEnd="true"
             android:id="@+id/pageIndicatorView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_marginBottom="20dp"
             android:layout_marginRight="30dp"
             app:piv_animationType="swap"
             app:piv_dynamicCount="true"
@@ -53,29 +55,28 @@
             app:piv_radius="5dp"
             app:piv_selectedColor="@color/textTabBright"
             app:piv_unselectedColor="@color/textTabLight"
-            app:piv_viewPager="@+id/mainpager"
-            android:layout_alignParentRight="true" />
+            app:piv_viewPager="@+id/mainpager" />
 
        </RelativeLayout>
 
     <LinearLayout
-           android:visibility="gone"
-           android:background="#80000000"
            android:id="@+id/tabs_layout"
            android:layout_width="match_parent"
            android:layout_height="50dp"
-           android:orientation="horizontal"
            android:layout_alignParentBottom="true"
+        android:background="#80000000"
+        android:orientation="horizontal"
+        android:visibility="gone"
            >
 
            <ImageView
-               android:padding="10dp"
-               android:src="@drawable/ic_account_circle_black_24dp"
                android:id="@+id/profileLabel"
                android:layout_width="0dp"
                android:layout_height="match_parent"
                android:layout_weight="1"
                android:background="#20000000"
+               android:padding="10dp"
+               android:src="@drawable/ic_account_circle_black_24dp"
                />
 
            <ImageView
@@ -94,16 +95,16 @@
        </LinearLayout>
 
     <ScrollView
-        android:layout_below="@+id/appbar"
-        android:scrollIndicators="none"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/appbar"
+        android:scrollIndicators="none">
 
         <LinearLayout
-            android:gravity="center"
             android:id="@+id/frame"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:gravity="center">
 
 
             <android.support.v4.view.ViewPager

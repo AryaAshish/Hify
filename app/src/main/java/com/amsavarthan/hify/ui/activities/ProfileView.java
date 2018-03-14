@@ -2,12 +2,13 @@ package com.amsavarthan.hify.ui.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -20,10 +21,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
@@ -35,7 +33,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class ProfileView extends AppCompatActivity {
 
-    TextView name,email,phone,friends;
+    public static Activity activity;
+    TextView name, email, friends;
     CircleImageView profilePic;
     FirebaseAuth mAuth;
     FirebaseFirestore mFirestore;
@@ -76,12 +75,13 @@ public class ProfileView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_view);
 
-
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/regular.ttf")
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
+
+        activity = this;
 
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
@@ -89,7 +89,6 @@ public class ProfileView extends AppCompatActivity {
         name = (TextView) findViewById(R.id.username);
         mRelativeLayout = (RelativeLayout) findViewById(R.id.layout);
         email = (TextView) findViewById(R.id.email);
-        phone = (TextView) findViewById(R.id.phone);
         friends = (TextView) findViewById(R.id.friends);
         profilePic = (CircleImageView) findViewById(R.id.profile_pic);
 
@@ -118,7 +117,6 @@ public class ProfileView extends AppCompatActivity {
         rs.moveToFirst();
 
         String nam = rs.getString(rs.getColumnIndex(UserHelper.CONTACTS_COLUMN_NAME));
-        String phon = rs.getString(rs.getColumnIndex(UserHelper.CONTACTS_COLUMN_PHONE));
         String emai = rs.getString(rs.getColumnIndex(UserHelper.CONTACTS_COLUMN_EMAIL));
         imag = rs.getString(rs.getColumnIndex(UserHelper.CONTACTS_COLUMN_IMAGE));
 
@@ -127,13 +125,14 @@ public class ProfileView extends AppCompatActivity {
         }
 
         name.setText(nam);
-        phone.setText(phon);
         email.setText(emai);
 
         Glide.with(ProfileView.this)
                 .setDefaultRequestOptions(new RequestOptions().placeholder(R.mipmap.profile_black))
                 .load(imag)
                 .into(profilePic);
+
+        userHelper.close();
 
         mRelativeLayout.animate()
                 .setDuration(500)
@@ -143,22 +142,28 @@ public class ProfileView extends AppCompatActivity {
 
     public void logout(View view) {
 
-        Map<String,Object> tokenRemove=new HashMap<>();
-        tokenRemove.put("token_id","");
+        try {
+            Map<String, Object> tokenRemove = new HashMap<>();
+            tokenRemove.put("token_id", "");
 
-        mFirestore.collection("Users").document(mAuth.getCurrentUser().getUid()).update(tokenRemove).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                mAuth.signOut();
-                MainActivity.activity.finish();
-                finish();
-                LoginActivity.startActivity(ProfileView.this);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e("Error",e.getMessage());
-            }
-        });
+            mFirestore.collection("Users").document(mAuth.getCurrentUser().getUid()).update(tokenRemove).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    userHelper.deleteContact(1);
+                    mAuth.signOut();
+                    MainActivity.activity.finish();
+                    LoginActivity.startActivityy(ProfileView.this, ProfileView.this);
+                    finish();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e("Error", e.getMessage());
+                }
+            });
+
+        } catch (Exception ex) {
+            Log.e("Logout Error", "Error:" + ex.getMessage());
+        }
     }
 }

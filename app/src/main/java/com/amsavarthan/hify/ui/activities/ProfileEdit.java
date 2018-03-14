@@ -2,20 +2,20 @@ package com.amsavarthan.hify.ui.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -48,7 +48,6 @@ public class ProfileEdit extends AppCompatActivity {
     private FirebaseFirestore mFireStore;
     private CircleImageView imageView;
     private EditText nameText;
-    private ProgressBar mProgressbar;
     private Uri imageUri;
     private StorageReference storageReference;
     private UserHelper userHelper;
@@ -56,6 +55,7 @@ public class ProfileEdit extends AppCompatActivity {
     private RelativeLayout mRelativeLayout;
     private Button button;
     private String nam;
+    private ProgressDialog mDialog;
 
     public static void startActivity(Context context){
         Intent intent=new Intent(context,ProfileEdit.class);
@@ -95,6 +95,12 @@ public class ProfileEdit extends AppCompatActivity {
                 .build()
         );
 
+        mDialog = new ProgressDialog(this);
+        mDialog.setMessage("Please wait..");
+        mDialog.setIndeterminate(true);
+        mDialog.setCanceledOnTouchOutside(false);
+        mDialog.setCancelable(false);
+
         imageUri=null;
         mFireStore=FirebaseFirestore.getInstance();
         storageReference= FirebaseStorage.getInstance().getReference().child("images");
@@ -102,7 +108,6 @@ public class ProfileEdit extends AppCompatActivity {
         mRelativeLayout = (RelativeLayout) findViewById(R.id.layout);
 
         imageView=(CircleImageView)findViewById(R.id.profile_image);
-        mProgressbar=(ProgressBar)findViewById(R.id.progressBar3);
         nameText=(EditText)findViewById(R.id.name) ;
         button=(Button)findViewById(R.id.button);
 
@@ -112,7 +117,6 @@ public class ProfileEdit extends AppCompatActivity {
                 onUpdateClick(view);
             }
         });
-        //mProgressbar.setVisibility(View.VISIBLE);
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,6 +144,7 @@ public class ProfileEdit extends AppCompatActivity {
                 .load(imag)
                 .into(imageView);
         imageUri=Uri.parse(imag);
+        userHelper.close();
 
         mRelativeLayout.setVisibility(View.VISIBLE);
         mRelativeLayout.setAlpha(0.0f);
@@ -241,7 +246,7 @@ public class ProfileEdit extends AppCompatActivity {
 
     public void performOnlineTask(){
         if (!imageUri.equals(Uri.parse(imag))) {
-            mProgressbar.setVisibility(View.VISIBLE);
+            mDialog.show();
             final String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
             StorageReference user_profile = storageReference.child(userUid + ".jpg");
             user_profile.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
@@ -261,7 +266,7 @@ public class ProfileEdit extends AppCompatActivity {
                         mFireStore.collection("Users").document(userUid).update(userMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                mProgressbar.setVisibility(View.INVISIBLE);
+                                mDialog.dismiss();
                                 userHelper.updateContactNameandImage(1, name_, downloadUri);
                                 Toast.makeText(ProfileEdit.this, "Profile updated.", Toast.LENGTH_SHORT).show();
 
@@ -271,7 +276,7 @@ public class ProfileEdit extends AppCompatActivity {
                             @Override
                             public void onFailure(@NonNull Exception e) {
 
-                                mProgressbar.setVisibility(View.INVISIBLE);
+                                mDialog.dismiss();
                                 Toast.makeText(ProfileEdit.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
 
                             }
@@ -279,14 +284,14 @@ public class ProfileEdit extends AppCompatActivity {
 
 
                     } else {
-                        mProgressbar.setVisibility(View.INVISIBLE);
+                        mDialog.dismiss();
                         Toast.makeText(ProfileEdit.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
             });
         } else {
 
-            mProgressbar.setVisibility(View.VISIBLE);
+            mDialog.show();
             final String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
             String token_id = FirebaseInstanceId.getInstance().getToken();
@@ -299,7 +304,7 @@ public class ProfileEdit extends AppCompatActivity {
             mFireStore.collection("Users").document(userUid).update(userMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    mProgressbar.setVisibility(View.INVISIBLE);
+                    mDialog.dismiss();
                     userHelper.updateContactName(1, name_);
                     Toast.makeText(ProfileEdit.this, "Profile updated.", Toast.LENGTH_SHORT).show();
 
@@ -309,7 +314,7 @@ public class ProfileEdit extends AppCompatActivity {
                 @Override
                 public void onFailure(@NonNull Exception e) {
 
-                    mProgressbar.setVisibility(View.INVISIBLE);
+                    mDialog.dismiss();
                     Toast.makeText(ProfileEdit.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
 
                 }

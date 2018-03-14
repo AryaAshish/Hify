@@ -6,8 +6,10 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
     <application
+        android:name=".utils.AppController"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
@@ -38,10 +40,13 @@
             android:resource="@array/preloaded_fonts" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_default_notification" />
+            android:resource="@mipmap/ic_launcher" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
         <activity
             android:name=".ui.activities.LoginActivity"
@@ -56,11 +61,30 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
 
-        <service android:name=".receivers.FCMMessaging">
+        <!--
+        service android:name=".receivers.FCMMessaging">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
+        </service
+        -->
+
+
+        <!-- Firebase Notifications -->
+        <service
+            android:name=".receivers.FCMService"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
         </service>
+        <service android:name=".receivers.InstanceIdService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <!-- ./Firebase Notifications -->
 
         <activity
             android:name=".ui.activities.Notification.NotificationActivity"
@@ -76,9 +100,6 @@
             android:name=".ui.activities.ProfileEdit"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".ui.activities.PhoneVerifyActivity"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.Notification.NotificationReplyActivity"
             android:screenOrientation="portrait">
@@ -127,7 +148,18 @@
         <activity
             android:name=".ui.activities.AddFriends"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.activities.FriendsView"></activity>
+        <activity
+            android:name=".ui.activities.FriendsView"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.FriendRequestActivty"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.amsavarthan.hify.TARGET_FRIENDREQUEST" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

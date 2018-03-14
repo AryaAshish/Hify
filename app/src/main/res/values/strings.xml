@@ -13,10 +13,12 @@
     <string name="loading_message">Getting Message..</string>
     <string name="verify_your_mobile">Verify your Mobile</string>
     <string name="title_1">Title</string>
-    <string name="text_1">Dummy text</string>
+    <string name="text_1">Text</string>
     <string name="messages">Messages</string>
     <string name="friends">Friends</string>
     <string name="profile">My Profile</string>
     <string name="posts">Posts</string>
+    <string name="action_remove">Unfriend</string>
+    <string name="transition_name">logo_transition</string>
 
 </resources>

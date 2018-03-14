@@ -13,121 +13,121 @@
 
       <de.hdodenhof.circleimageview.CircleImageView
           android:id="@+id/image"
-          android:onClick="PreviewProfileImage"
           android:layout_width="120dp"
           android:layout_height="120dp"
-          android:layout_marginTop="30dp"
           android:layout_below="@+id/progressBar"
+          android:layout_centerHorizontal="true"
+          android:layout_marginTop="30dp"
+          android:onClick="PreviewProfileImage"
           android:src="@mipmap/profile_black"
-          app:civ_border_width="1dp"
           app:civ_border_color="@color/colorPrimary"
-          android:layout_centerHorizontal="true" />
+          app:civ_border_width="1dp" />
 
       <TextView
           android:id="@+id/user_name1"
           android:layout_width="match_parent"
-          android:gravity="center_horizontal"
           android:layout_height="wrap_content"
           android:layout_below="@+id/image"
           android:layout_centerHorizontal="true"
-          android:layout_marginTop="30dp"
           android:layout_marginLeft="30dp"
           android:layout_marginRight="30dp"
+          android:layout_marginTop="30dp"
           android:fontFamily="@font/nunito_semibold"
+          android:gravity="center_horizontal"
           android:text="Send Message to :"
           android:textSize="18sp" />
 
       <TextView
           android:id="@+id/user_name"
           android:layout_width="match_parent"
-          android:gravity="center_horizontal"
           android:layout_height="wrap_content"
           android:layout_below="@+id/user_name1"
           android:layout_centerHorizontal="true"
-          android:layout_marginLeft="30dp"
-          android:textColor="#2591FC"
-          android:layout_marginRight="30dp"
           android:layout_marginBottom="30dp"
+          android:layout_marginLeft="30dp"
+          android:layout_marginRight="30dp"
           android:fontFamily="@font/nunito_semibold"
+          android:gravity="center_horizontal"
+          android:textColor="#2591FC"
           android:textSize="18sp" />
 
      <FrameLayout
          android:id="@+id/imageLayout"
-         android:layout_centerHorizontal="true"
-         android:layout_below="@id/user_name"
          android:layout_width="match_parent"
-         android:layout_height="wrap_content">
+         android:layout_height="wrap_content"
+         android:layout_below="@id/user_name"
+         android:layout_centerHorizontal="true">
 
          <ImageView
-             android:onClick="PreviewImage"
              android:id="@+id/imagePreview"
-             android:scaleType="centerCrop"
              android:layout_width="match_parent"
              android:layout_height="200dp"
-             android:contentDescription="attachment" />
+             android:contentDescription="attachment"
+             android:onClick="PreviewImage"
+             android:scaleType="centerCrop" />
 
          <Button
-             android:onClick="RemoveImage"
-             android:layout_width="match_parent"
              style="@style/Widget.AppCompat.Button.Borderless"
-             android:background="#60000000"
-             android:text="Remove Image"
-             android:textColor="#ffffff"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
              android:layout_gravity="bottom"
-             android:textAllCaps="false"
+             android:background="#60000000"
              android:fontFamily="@font/nunito_semibold"
-             android:layout_height="wrap_content" />
+             android:onClick="RemoveImage"
+             android:text="Remove Image"
+             android:textAllCaps="false"
+             android:textColor="#ffffff" />
 
      </FrameLayout>
 
       <LinearLayout
+          android:id="@+id/options"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/imageLayout"
           android:layout_marginBottom="10dp"
           android:layout_marginTop="20dp"
-          android:id="@+id/options"
           android:gravity="center_horizontal"
-          android:orientation="horizontal"
-          android:layout_below="@+id/imageLayout"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content">
+          android:orientation="horizontal">
 
           <ImageView
-              android:onClick="OnLocationClick"
               android:id="@+id/getLocation"
-              android:padding="16dp"
-              android:clickable="true"
-              android:foreground="?attr/selectableItemBackground"
-              android:src="@mipmap/location"
               android:layout_width="70dp"
               android:layout_height="70dp"
               android:layout_marginEnd="5dp"
+              android:layout_marginRight="5dp"
+              android:clickable="true"
               android:focusable="true"
-              android:layout_marginRight="5dp" />
+              android:foreground="?attr/selectableItemBackground"
+              android:onClick="OnLocationClick"
+              android:padding="16dp"
+              android:src="@mipmap/location" />
 
           <ImageView
-              android:onClick="SelectImage"
               android:id="@+id/getImage"
-              android:padding="15dp"
-              android:clickable="true"
-              android:foreground="?attr/selectableItemBackground"
-              android:src="@mipmap/image"
               android:layout_width="70dp"
               android:layout_height="70dp"
+              android:layout_marginLeft="5dp"
               android:layout_marginStart="5dp"
+              android:clickable="true"
               android:focusable="true"
-              android:layout_marginLeft="5dp" />
+              android:foreground="?attr/selectableItemBackground"
+              android:onClick="SelectImage"
+              android:padding="15dp"
+              android:src="@mipmap/image" />
 
       </LinearLayout>
 
       <LinearLayout
-          android:layout_below="@+id/options"
           android:id="@+id/sendLayout"
-          android:layout_marginTop="10dp"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/options"
+          android:layout_marginBottom="30dp"
           android:layout_marginLeft="30dp"
           android:layout_marginRight="30dp"
-          android:layout_marginBottom="30dp"
-          android:orientation="vertical"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content">
+          android:layout_marginTop="10dp"
+          android:orientation="vertical">
 
           <EditText
               android:id="@+id/message"
@@ -140,29 +140,19 @@
 
           <Button
               android:id="@+id/send"
-              android:padding="10dp"
-              android:layout_marginTop="15dp"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
+              android:layout_marginTop="15dp"
               android:background="@drawable/button_primary_backgtound"
+              android:fontFamily="@font/nunito_semibold"
+              android:padding="10dp"
+              android:text="Send"
               android:textAllCaps="false"
               android:textColor="#ffffff"
               android:textSize="18sp"
-              android:fontFamily="@font/nunito_semibold"
-              android:text="Send"
               />
 
       </LinearLayout>
-
-      <ProgressBar
-          android:visibility="invisible"
-          android:id="@+id/progressBar"
-          style="?android:attr/progressBarStyleHorizontal"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:indeterminate="true"
-          android:layout_alignParentTop="true"
-          android:layout_centerHorizontal="true" />
 
   </RelativeLayout>
 

@@ -6,23 +6,33 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.amsavarthan.hify.Manifest;
 import com.amsavarthan.hify.R;
 import com.amsavarthan.hify.adapters.CardPagerAdapter;
 import com.amsavarthan.hify.adapters.PagerViewAdapter;
 import com.amsavarthan.hify.anim.Transformer;
 import com.amsavarthan.hify.models.CardItem;
+import com.amsavarthan.hify.ui.activities.Notification.NotificationActivity;
+import com.amsavarthan.hify.ui.activities.Notification.NotificationImage;
+import com.amsavarthan.hify.ui.activities.Notification.NotificationImageReply;
+import com.amsavarthan.hify.ui.activities.Notification.NotificationReplyActivity;
+import com.amsavarthan.hify.utils.Config;
 import com.amsavarthan.hify.utils.NetworkUtil;
 import com.amsavarthan.hify.utils.database.UserHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -33,6 +43,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -41,8 +52,10 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.DialogOnDeniedPermissionListener;
 import com.karumi.dexter.listener.single.PermissionListener;
+import com.tapadoo.alerter.Alerter;
+import com.tapadoo.alerter.OnHideAlertListener;
+import com.tapadoo.alerter.OnShowAlertListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,27 +65,61 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static String userId;
+    public static Activity activity;
     private ImageView profileLabel,friendsLabel,hifiLabel;
     private ViewPager mainpager;
     private PagerViewAdapter mPagerViewAdapter;
     private FirebaseAuth mAuth;
     private FirebaseUser currentuser;
-    public static String userId;
-    public static Activity activity;
     private UserHelper userHelper;
 
     private CardPagerAdapter mCardAdapter;
     private Transformer mCardShadowTransformer;
     private String nam,imag;
     private StorageReference storageReference;
+    public BroadcastReceiver NetworkChangeReceiver = new BroadcastReceiver() {
 
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int status = NetworkUtil.getConnectivityStatusString(context);
+            Log.i("Network reciever", "OnReceive");
+            if (!"android.net.conn.CONNECTIVITY_CHANGE".equals(intent.getAction())) {
+                if (status != NetworkUtil.NETWORK_STATUS_NOT_CONNECTED) {
+                    performUploadTask();
+                }
+            }
+        }
+    };
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
+    private Intent resultIntent;
 
-
-    public static void startActivity(Context context){
+    public static void startActivityy(Context context) {
         Intent intent=new Intent(context,MainActivity.class);
         context.startActivity(intent);
     }
 
+    public static void setLightStatusBar(View view, Activity activity) {
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            int flags = view.getSystemUiVisibility();
+            flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            view.setSystemUiVisibility(flags);
+            activity.getWindow().setStatusBarColor(Color.WHITE);
+        }
+    }
+
+    public static void clearLightStatusBar(Activity activity, View view) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            Window window = activity.getWindow();
+            window.setStatusBarColor(ContextCompat
+                    .getColor(activity, R.color.colorPrimaryDark));
+
+        }
+    }
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -89,8 +136,16 @@ public class MainActivity extends AppCompatActivity {
             }catch (Exception e){
                 Log.e("Error","."+e.getLocalizedMessage());
             }
+
+            LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                    new IntentFilter(Config.REGISTRATION_COMPLETE));
+
+            LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                    new IntentFilter(Config.PUSH_NOTIFICATION));
+
+
         }else{
-            LoginActivity.startActivity(this);
+            LoginActivity.startActivityy(this, this);
         }
     }
 
@@ -98,6 +153,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Log.e("timeMills", String.valueOf(System.currentTimeMillis()));
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/regular.ttf")
@@ -115,8 +172,10 @@ public class MainActivity extends AppCompatActivity {
         currentuser=mAuth.getCurrentUser();
 
         if(currentuser==null){
-            LoginActivity.startActivity(MainActivity.this);
+            LoginActivity.startActivityy(this, this);
         }else {
+
+            firebaseMessagingService();
 
             Dexter.withActivity(this)
                     .withPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -150,8 +209,8 @@ public class MainActivity extends AppCompatActivity {
             //mPagerViewAdapter=new PagerViewAdapter(getSupportFragmentManager());
             mCardAdapter = new CardPagerAdapter(this);
             mCardAdapter.addCardItem(new CardItem(R.string.posts, R.string.text_1, R.mipmap.feed_white, "#3cba54", "View Feed", "Add a new post" ));
-            mCardAdapter.addCardItem(new CardItem(R.string.friends, R.string.text_1, R.mipmap.friends, "#4885ed", "My Friends", "Add a Friend"));
             mCardAdapter.addCardItem(new CardItem(R.string.messages, R.string.text_1, R.mipmap.message, "#db3236", "Send a message", "View Messages"));
+            mCardAdapter.addCardItem(new CardItem(R.string.friends, R.string.text_1, R.mipmap.friends, "#4885ed", "My Friends", "Add a Friend"));
             mCardAdapter.addCardItem(new CardItem(R.string.profile, R.string.text_1, R.mipmap.profile, "#f4c20d", "View Profile", "Edit Profile"));
 
             try {
@@ -167,59 +226,175 @@ public class MainActivity extends AppCompatActivity {
             mainpager.setOffscreenPageLimit(3);
 
         }
-        /*
-        profileLabel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mainpager.setCurrentItem(0);
-            }
-        });
 
-        friendsLabel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mainpager.setCurrentItem(1);
-            }
-        });
 
-        hifiLabel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mainpager.setCurrentItem(2);
-            }
-        });
-        */
+    }
 
+    private void firebaseMessagingService() {
+
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.i("OnBroadcastReceiver", "received");
+
+                // checking for type intent filter
+                if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
+                    // gcm successfully registered
+                    // now subscribe to `global` topic to receive app wide notifications
+                    FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
+
+
+                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
+                    Log.i("OnBroadcastReceiver", "push_received");
+
+                    // new push notification is received
+                    String click_action = intent.getStringExtra("click_action");
+                    Log.i("OnBroadcastReceiver", click_action);
+
+                    if (click_action.equals("com.amsavarthan.hify.TARGETNOTIFICATION")) {
+
+                        resultIntent = new Intent(MainActivity.this, NotificationActivity.class);
+
+                        showAlert(resultIntent, intent);
+
+                    } else if (click_action.equals("com.amsavarthan.hify.TARGETNOTIFICATIONREPLY")) {
+
+                        resultIntent = new Intent(MainActivity.this, NotificationReplyActivity.class);
+
+                        showAlert(resultIntent, intent);
+
+                    } else if (click_action.equals("com.amsavarthan.hify.TARGETNOTIFICATION_IMAGE")) {
+
+                        resultIntent = new Intent(MainActivity.this, NotificationImage.class);
+
+                        showAlert(resultIntent, intent);
+
+
+                    } else if (click_action.equals("com.amsavarthan.hify.TARGETNOTIFICATIONREPLY_IMAGE")) {
+
+                        resultIntent = new Intent(MainActivity.this, NotificationImageReply.class);
+
+                        showAlert(resultIntent, intent);
+
+                    } else if (click_action.equals("com.amsavarthan.hify.TARGET_FRIENDREQUEST")) {
+
+                        resultIntent = new Intent(MainActivity.this, FriendRequestActivty.class);
+
+                        showAlert(resultIntent, intent);
+
+
+                    } else {
+                        resultIntent = null;
+                    }
+
+                }
+            }
+        };
+    }
+
+    private void showAlert(final Intent resultIntent, Intent intent) {
+
+        String name = intent.getStringExtra("name");
+        String from_image = intent.getStringExtra("from_image");
+        String message = intent.getStringExtra("message");
+        String from_id = intent.getStringExtra("from_id");
+        int notification_id = intent.getIntExtra("notification_id", (int) System.currentTimeMillis());
+        String reply_for = intent.getStringExtra("reply_for");
+        final String imageUrl = intent.getStringExtra("image");
+        final String body = intent.getStringExtra("body");
+        final String title = intent.getStringExtra("title");
+
+        String f_id = intent.getStringExtra("f_id");
+        String f_name = intent.getStringExtra("f_name");
+        String f_email = intent.getStringExtra("f_email");
+        String f_token = intent.getStringExtra("f_token");
+        String f_image = intent.getStringExtra("f_image");
+
+
+        resultIntent.putExtra("title", title);
+        resultIntent.putExtra("body", body);
+        resultIntent.putExtra("name", name);
+        resultIntent.putExtra("from_image", from_image);
+        resultIntent.putExtra("message", message);
+        resultIntent.putExtra("from_id", from_id);
+        resultIntent.putExtra("notification_id", notification_id);
+        resultIntent.putExtra("reply_for", reply_for);
+        resultIntent.putExtra("image", imageUrl);
+        resultIntent.putExtra("reply_image", from_image);
+
+        resultIntent.putExtra("f_id", f_id);
+        resultIntent.putExtra("f_name", f_name);
+        resultIntent.putExtra("f_email", f_email);
+        resultIntent.putExtra("f_image", f_image);
+        resultIntent.putExtra("f_token", f_token);
+
+
+        Alerter.create(MainActivity.this)
+                .setTitle(title)
+                .setText(body)
+                .enableSwipeToDismiss()
+                .setDuration(5000)//6sec
+                .enableProgress(true)
+                .enableVibration(true)
+                .setBackgroundColorRes(R.color.colorAccent)
+                .setProgressColorRes(R.color.colorPrimary)
+                .setTitleAppearance(R.style.AlertTextAppearance_Title)
+                .setTextAppearance(R.style.AlertTextAppearance_Text)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startActivity(resultIntent);
+                    }
+                }).setOnShowListener(new OnShowAlertListener() {
+            @Override
+            public void onShow() {
+                clearLightStatusBar(activity, getWindow().getDecorView());
+            }
+        }).setOnHideListener(new OnHideAlertListener() {
+            @Override
+            public void onHide() {
+                setLightStatusBar(getWindow().getDecorView(), activity);
+            }
+        }).show();
+
+
+    }
+
+    @Override
+    protected void onPause() {
+        //LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+        super.onPause();
     }
 
     private void performLogintask() {
 
-        Cursor rs=userHelper.getData(1);
+
+        Cursor rs = userHelper.getData(1);
         rs.moveToFirst();
 
         String nam = rs.getString(rs.getColumnIndex(UserHelper.CONTACTS_COLUMN_NAME));
 
-        if(!rs.isClosed())
+        if (!rs.isClosed())
             rs.close();
 
-        if(nam==null) {
+        if (nam == null) {
             FirebaseFirestore.getInstance().collection("Users").document(currentuser.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                     userHelper.insertContact(
                             documentSnapshot.getString("name")
-                            ,documentSnapshot.getString("phone")
-                            ,documentSnapshot.getString("email")
-                            ,documentSnapshot.getString("image")
+                            , documentSnapshot.getString("email")
+                            , documentSnapshot.getString("image")
                     );
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Log.e("Error",".."+e.getMessage());
+                    Log.e("Error", ".." + e.getMessage());
                 }
             });
         }
+
 
     }
 
@@ -291,7 +466,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(NetworkChangeReceiver);
+        //unregisterReceiver(NetworkChangeReceiver);
     }
 
     public boolean isOnline() {
@@ -300,58 +475,5 @@ public class MainActivity extends AppCompatActivity {
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
-
-    //add it in onPageSelected
-    private void changeTabs(int position) {
-
-       if(position==0){
-
-           profileLabel.setBackgroundColor(getResources().getColor(R.color.blackDarkOverlay));
-           //profileLabel.setTextSize(22);
-
-           friendsLabel.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-           //friendsLabel.setTextSize(16);
-
-           hifiLabel.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-           //hifiLabel.setTextSize(16);
-
-       }else if(position==1){
-
-           profileLabel.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-           //profileLabel.setTextSize(16);
-
-           friendsLabel.setBackgroundColor(getResources().getColor(R.color.blackDarkOverlay));
-           //friendsLabel.setTextSize(22);
-
-           hifiLabel.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-           //hifiLabel.setTextSize(16);
-
-       }else if(position==2){
-
-           profileLabel.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-           //profileLabel.setTextSize(16);
-
-           friendsLabel.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-           //friendsLabel.setTextSize(16);
-
-           hifiLabel.setBackgroundColor(getResources().getColor(R.color.blackDarkOverlay));
-           //hifiLabel.setTextSize(22);
-
-       }
-    }
-
-    public BroadcastReceiver NetworkChangeReceiver =new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            int status = NetworkUtil.getConnectivityStatusString(context);
-            Log.e("Network reciever", "OnReceive");
-            if (!"android.net.conn.CONNECTIVITY_CHANGE".equals(intent.getAction())) {
-                if(status!= NetworkUtil.NETWORK_STATUS_NOT_CONNECTED){
-                    performUploadTask();
-                }
-            }
-        }
-    };
 
 }

@@ -1,23 +1,22 @@
 package com.amsavarthan.hify.models;
 
 /**
- * Created by amsavarthan on 22/2/18.
+ * Created by amsavarthan on 11/3/18.
  */
 
-public class Friends {
+public class FriendRequest extends UserId {
 
-    private String id, name, image, email, token_id;
+    private String id, name, image, email, token;
 
-    public Friends() {
-
+    public FriendRequest() {
     }
 
-    public Friends(String id, String name, String image, String email, String token_id) {
+    public FriendRequest(String id, String name, String image, String email, String token) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.email = email;
-        this.token_id = token_id;
+        this.token = token;
     }
 
     public String getId() {
@@ -52,11 +51,11 @@ public class Friends {
         this.email = email;
     }
 
-    public String getToken_id() {
-        return token_id;
+    public String getToken() {
+        return token;
     }
 
-    public void setToken_id(String token_id) {
-        this.token_id = token_id;
+    public void setToken(String token) {
+        this.token = token;
     }
 }

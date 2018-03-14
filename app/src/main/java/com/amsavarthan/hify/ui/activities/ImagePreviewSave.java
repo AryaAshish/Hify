@@ -1,19 +1,21 @@
 package com.amsavarthan.hify.ui.activities;
 
 import android.app.DownloadManager;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
-import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -23,6 +25,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.amsavarthan.hify.R;
+import com.amsavarthan.hify.utils.Config;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.github.chrisbanes.photoview.PhotoView;
@@ -35,18 +38,48 @@ import com.karumi.dexter.listener.single.DialogOnDeniedPermissionListener;
 import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class ImagePreviewSave extends AppCompatActivity {
 
-    private PhotoView photoView;
     String intent_URI,intent_URL;
-    private long refid;
     ArrayList<Long> list = new ArrayList<>();
+    private PhotoView photoView;
+    private long refid;
     private String sender_name;
+    public BroadcastReceiver onComplete = new BroadcastReceiver() {
+
+        public void onReceive(Context ctxt, Intent intent) {
+
+            long referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+            list.remove(referenceId);
+            if (list.isEmpty()) {
+                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    setupChannels(notificationManager);
+                }
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
+                        ImagePreviewSave.this, Config.ADMIN_CHANNEL_ID);
+
+                android.app.Notification notification;
+                notification = mBuilder
+                        .setAutoCancel(true)
+                        .setContentTitle("Download success")
+                        .setColorized(true)
+                        .setColor(Color.parseColor("#2591FC"))
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentText("Image saved in /Downloads/Hify/" + sender_name)
+                        .build();
+
+                notificationManager.notify(0, notification);
+                Toast.makeText(ctxt, "Image saved in /Downloads/Hify/" + sender_name, Toast.LENGTH_LONG).show();
+            }
+        }
+
+    };
     private DownloadManager downloadManager;
 
     @Override
@@ -115,7 +148,7 @@ public class ImagePreviewSave extends AppCompatActivity {
                         request.setAllowedOverRoaming(true);
                         request.setTitle("Hify");
                         request.setDescription("Downloading image...");
-                        request.setVisibleInDownloadsUi(false);
+                        request.setVisibleInDownloadsUi(true);
                         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "/Hify Images/"+sender_name  + "/HFY_" +  System.currentTimeMillis() + ".jpeg");
 
                         refid = downloadManager.enqueue(request);
@@ -172,18 +205,17 @@ public class ImagePreviewSave extends AppCompatActivity {
 
     }
 
-    public BroadcastReceiver onComplete = new BroadcastReceiver() {
-
-        public void onReceive(Context ctxt, Intent intent) {
-
-            long referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-            list.remove(referenceId);
-            if (list.isEmpty())
-            {
-                Toast.makeText(ctxt, "Image saved in /Downloads/Hify/"+sender_name, Toast.LENGTH_LONG).show();
-            }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void setupChannels(NotificationManager notificationManager) {
+        CharSequence adminChannelName = "Image Downloads";
+        String adminChannelDescription = "Used to show the progress of downloading image";
+        NotificationChannel adminChannel;
+        adminChannel = new NotificationChannel(Config.ADMIN_CHANNEL_ID, adminChannelName, NotificationManager.IMPORTANCE_DEFAULT);
+        adminChannel.setDescription(adminChannelDescription);
+        adminChannel.enableVibration(true);
+        if (notificationManager != null) {
+            notificationManager.createNotificationChannel(adminChannel);
         }
-
-    };
+    }
 
 }

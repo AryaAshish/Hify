@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
@@ -9,38 +9,43 @@
 
     <LinearLayout
         android:id="@+id/appbar"
-        android:orientation="horizontal"
-        android:padding="5dp"
-        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        android:padding="5dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/logo"
             android:layout_width="40dp"
-            android:src="@mipmap/logo"
-            android:layout_marginLeft="10dp"
             android:layout_height="40dp"
-            android:layout_marginStart="10dp" />
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:src="@mipmap/logo"
+            android:transitionName="@string/transition_name" />
 
         <TextView
+            fontPath="fonts/bold.ttf"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:gravity="center_vertical"
             android:text="Add Friends"
-            fontPath="fonts/bold.ttf"
             android:textColor="#212121"
             android:textSize="22sp"
-            tools:ignore="MissingPrefix"
-            android:layout_marginStart="10dp" />
+            tools:ignore="MissingPrefix" />
 
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:layout_below="@+id/appbar"
-        android:id="@+id/usersList"
-        android:padding="10dp"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/appbar">
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/usersList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </android.support.constraint.ConstraintLayout>
 </RelativeLayout>

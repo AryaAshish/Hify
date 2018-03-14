@@ -4,20 +4,22 @@ package com.amsavarthan.hify.models;
  * Created by amsavarthan on 22/2/18.
  */
 
-public class Friends {
+public class ViewFriends {
 
     private String id, name, image, email, token_id;
+    private boolean accepted;
 
-    public Friends() {
+    public ViewFriends() {
 
     }
 
-    public Friends(String id, String name, String image, String email, String token_id) {
+    public ViewFriends(String id, String name, String image, String email, String token_id, boolean accepted) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.email = email;
         this.token_id = token_id;
+        this.accepted = accepted;
     }
 
     public String getId() {
@@ -58,5 +60,13 @@ public class Friends {
 
     public void setToken_id(String token_id) {
         this.token_id = token_id;
+    }
+
+    public boolean isAccepted() {
+        return accepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        this.accepted = accepted;
     }
 }

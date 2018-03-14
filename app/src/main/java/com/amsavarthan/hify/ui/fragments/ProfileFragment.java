@@ -15,11 +15,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.amsavarthan.hify.utils.CardAdapter;
+import com.amsavarthan.hify.R;
 import com.amsavarthan.hify.ui.activities.ImagePreviewSave;
 import com.amsavarthan.hify.ui.activities.LoginActivity;
 import com.amsavarthan.hify.ui.activities.ProfileEdit;
-import com.amsavarthan.hify.R;
+import com.amsavarthan.hify.utils.CardAdapter;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -145,7 +145,7 @@ public class ProfileFragment extends Fragment {
                         @Override
                         public void onSuccess(Void aVoid) {
                             mAuth.signOut();
-                            LoginActivity.startActivity(container.getContext());
+                            LoginActivity.startActivityy(container.getContext(), getActivity());
                             getActivity().finish();
                         }
                     });

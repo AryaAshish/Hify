@@ -21,7 +21,6 @@ public class UserHelper extends SQLiteOpenHelper {
     public static final String CONTACTS_COLUMN_ID = "id";
     public static final String CONTACTS_COLUMN_NAME = "name";
     public static final String CONTACTS_COLUMN_EMAIL = "email";
-    public static final String CONTACTS_COLUMN_PHONE = "phone";
     public static final String CONTACTS_COLUMN_IMAGE = "image";
     private HashMap hp;
 
@@ -34,7 +33,7 @@ public class UserHelper extends SQLiteOpenHelper {
         // TODO Auto-generated method stub
         db.execSQL(
                 "create table contacts " +
-                        "(id integer primary key, name text,phone text,email text,image text)"
+                        "(id integer primary key, name text,email text,image text)"
         );
     }
 
@@ -45,11 +44,10 @@ public class UserHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertContact (String name, String phone, String email, String image) {
+    public boolean insertContact(String name, String email, String image) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("name", name);
-        contentValues.put("phone", phone);
         contentValues.put("email", email);
         contentValues.put("image", image);
         db.insert("contacts", null, contentValues);
@@ -68,11 +66,10 @@ public class UserHelper extends SQLiteOpenHelper {
         return numRows;
     }
 
-    public boolean updateContact (Integer id, String name, String phone, String email, String image) {
+    public boolean updateContact(Integer id, String name, String email, String image) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("name", name);
-        contentValues.put("phone", phone);
         contentValues.put("email", email);
         contentValues.put("image", image);
         db.update("contacts", contentValues, "id = ? ", new String[] { Integer.toString(id) } );

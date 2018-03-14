@@ -1,14 +1,15 @@
 package com.amsavarthan.hify.ui.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -16,7 +17,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,12 +65,11 @@ public class SendActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE = 100;
     private static final int PLACE_PICKER_REQUEST =101 ;
+    Button mSend;
     private TextView username;
     private String user_id,current_id;
-    Button mSend;
     private EditText message;
     private FirebaseFirestore mFirestore;
-    private ProgressBar mBar;
     private CircleImageView image;
     private Uri imageUri;
     private ImageView imagePreview;
@@ -80,12 +79,27 @@ public class SendActivity extends AppCompatActivity {
     private GeoDataClient mGeoDataClient;
     private Place place;
     private String name;
-
+    private ProgressDialog mDialog;
+    private String message_type;
+    private boolean isLocation;
 
     public static void startActivityExtra(Context context,String extraString){
         Intent intent=new Intent(context,SendActivity.class);
         intent.putExtra("userId",extraString);
         context.startActivity(intent);
+    }
+
+    @NonNull
+    public static String random() {
+        Random generator = new Random();
+        StringBuilder randomStringBuilder = new StringBuilder();
+        int randomLength = generator.nextInt(10);
+        char tempChar;
+        for (int i = 0; i < randomLength; i++) {
+            tempChar = (char) (generator.nextInt(96) + 32);
+            randomStringBuilder.append(tempChar);
+        }
+        return randomStringBuilder.toString();
     }
 
     @Override
@@ -104,6 +118,12 @@ public class SendActivity extends AppCompatActivity {
                 .build()
         );
 
+        mDialog = new ProgressDialog(this);
+        mDialog.setMessage("Please wait..");
+        mDialog.setIndeterminate(true);
+        mDialog.setCanceledOnTouchOutside(false);
+        mDialog.setCancelable(false);
+
         imageUri=null;
         mGeoDataClient = Places.getGeoDataClient(this, null);
 
@@ -117,7 +137,6 @@ public class SendActivity extends AppCompatActivity {
         imagePreview=(ImageView)findViewById(R.id.imagePreview);
         mSend=(Button) findViewById(R.id.send);
         message=(EditText)findViewById(R.id.message);
-        mBar=(ProgressBar)findViewById(R.id.progressBar);
         imageLayout=(FrameLayout)findViewById(R.id.imageLayout);
 
         imageLayout.setVisibility(View.GONE);
@@ -154,10 +173,12 @@ public class SendActivity extends AppCompatActivity {
                         //Send only message
                         Toast.makeText(SendActivity.this, "Sending...", Toast.LENGTH_SHORT).show();
 
-                        mBar.setVisibility(View.VISIBLE);
+                        mDialog.show();
                         Map<String,Object> notificationMessage=new HashMap<>();
                         notificationMessage.put("message",message_);
                         notificationMessage.put("from",current_id);
+                        notificationMessage.put("notification_id", (int) System.currentTimeMillis());
+                        notificationMessage.put("timestamp", (int) System.currentTimeMillis());
 
                         mFirestore.collection("Users/"+user_id+"/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                             @Override
@@ -165,20 +186,19 @@ public class SendActivity extends AppCompatActivity {
 
                                 Toast.makeText(SendActivity.this, "Hify sent!", Toast.LENGTH_SHORT).show();
                                 message.setText("");
-                                mBar.setVisibility(View.INVISIBLE);
+                                mDialog.dismiss();
 
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 Toast.makeText(SendActivity.this, "Error sending Hify: "+e.getMessage(), Toast.LENGTH_SHORT).show();
-                                mBar.setVisibility(View.INVISIBLE);
+                                mDialog.dismiss();
                             }
                         });
-
                     }else{
                         //Send message with Image
-                        mBar.setVisibility(View.VISIBLE);
+                        mDialog.show();
 
                         Toast.makeText(SendActivity.this, "Image uploading..", Toast.LENGTH_SHORT).show();
 
@@ -194,6 +214,8 @@ public class SendActivity extends AppCompatActivity {
                                 notificationMessage.put("image",downloadUri);
                                 notificationMessage.put("message",message_);
                                 notificationMessage.put("from",current_id);
+                                notificationMessage.put("notification_id", String.valueOf(System.currentTimeMillis()));
+                                notificationMessage.put("timestamp", String.valueOf(System.currentTimeMillis()));
 
                                 mFirestore.collection("Users/"+user_id+"/Notifications_image").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                     @Override
@@ -201,14 +223,14 @@ public class SendActivity extends AppCompatActivity {
 
                                         Toast.makeText(SendActivity.this, "Hify sent!", Toast.LENGTH_SHORT).show();
                                         message.setText("");
-                                        mBar.setVisibility(View.INVISIBLE);
+                                        mDialog.dismiss();
 
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
                                         Toast.makeText(SendActivity.this, "Error sending Hify: "+e.getMessage(), Toast.LENGTH_SHORT).show();
-                                        mBar.setVisibility(View.INVISIBLE);
+                                        mDialog.dismiss();
                                     }
                                 });
 
@@ -216,7 +238,7 @@ public class SendActivity extends AppCompatActivity {
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                mBar.setVisibility(View.INVISIBLE);
+                                mDialog.dismiss();
                                 Toast.makeText(SendActivity.this, "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -243,19 +265,6 @@ public class SendActivity extends AppCompatActivity {
 
     }
 
-    @NonNull
-    public static String random() {
-        Random generator = new Random();
-        StringBuilder randomStringBuilder = new StringBuilder();
-        int randomLength = generator.nextInt(10);
-        char tempChar;
-        for (int i = 0; i < randomLength; i++){
-            tempChar = (char) (generator.nextInt(96) + 32);
-            randomStringBuilder.append(tempChar);
-        }
-        return randomStringBuilder.toString();
-    }
-
     private void getPhotos(String placeId) {
         final Task<PlacePhotoMetadataResponse> photoMetadataResponse = mGeoDataClient.getPlacePhotos(placeId);
         photoMetadataResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
@@ -280,7 +289,7 @@ public class SendActivity extends AppCompatActivity {
                            PlacePhotoResponse photo = task.getResult();
                            Bitmap bitmap = photo.getBitmap();
                            imageLayout.setVisibility(View.VISIBLE);
-                           imagePreview.setImageURI(saveImageandGetUri(bitmap));
+                           imageUri = saveImageandGetUri(bitmap);
                            Toast.makeText(SendActivity.this, saveImageandGetUri(bitmap).toString(), Toast.LENGTH_SHORT).show();
                        }
                    });
