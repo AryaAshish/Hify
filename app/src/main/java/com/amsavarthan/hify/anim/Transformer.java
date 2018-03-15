@@ -21,6 +21,7 @@ public class Transformer implements ViewPager.OnPageChangeListener, ViewPager.Pa
         mViewPager = viewPager;
         viewPager.addOnPageChangeListener(this);
         mAdapter = adapter;
+        enableScaling(true);
     }
 
     public void enableScaling(boolean enable) {

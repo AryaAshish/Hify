@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/colorPrimaryy"
     tools:context="com.amsavarthan.hify.ui.activities.FriendRequestActivty">
 
     <LinearLayout
@@ -53,7 +53,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="30dp"
             android:src="@mipmap/profile_black"
-            app:civ_border_color="@color/colorPrimary"
+            app:civ_border_color="@color/colorPrimaryy"
             app:civ_border_width="1dp" />
 
         <TextView
@@ -91,7 +91,7 @@
             android:background="@drawable/button_accent_backgtound"
             android:onClick="onAcceptClick"
             android:text="Accept friend request"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorPrimaryy" />
 
         <TextView
             android:id="@+id/info"

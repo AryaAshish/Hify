@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/colorPrimaryy"
     tools:context=".ui.activities.RegisterActivity">
 
     <RelativeLayout
@@ -55,7 +55,7 @@
             android:paddingRight="25dp"
             android:paddingStart="25dp"
             android:paddingTop="15dp"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorPrimaryy" />
 
         <EditText
             android:id="@+id/email"
@@ -76,7 +76,7 @@
             android:paddingRight="25dp"
             android:paddingStart="25dp"
             android:paddingTop="15dp"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorPrimaryy" />
 
         <EditText
             android:id="@+id/password"
@@ -97,7 +97,7 @@
             android:paddingRight="25dp"
             android:paddingStart="25dp"
             android:paddingTop="15dp"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorPrimaryy" />
 
         <Button
             android:id="@+id/button"
@@ -112,7 +112,7 @@
             android:fontFamily="@font/nunito_semibold"
             android:text="@string/register_message"
             android:textAllCaps="false"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/colorPrimaryDarkk"
             android:textSize="16sp" />
 
     </RelativeLayout>

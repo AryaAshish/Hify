@@ -1,23 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.amsavarthan.hify">
 
+    <uses-permission
+        android:name="android.permission.ACCESS_COARSE_LOCATION"
+        tools:ignore="ManifestOrder" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
     <application
-        android:name=".utils.AppController"
+        android:name=".ui.activities.Extras.Weather.WeatherExtra"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning,ManifestResource">
         <activity
             android:name=".ui.activities.MainActivity"
             android:screenOrientation="portrait">
@@ -31,6 +44,15 @@
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Base.Theme.AppCompat" />
+
+        <!-- baidu location -->
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="8Ag8g9warGQeUVFbqx4LRrXU" />
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -160,6 +182,242 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.activities.Extras.ExtrasActivity"
+            android:screenOrientation="portrait" />
+
+        <!---Weather-->
+        <activity
+            android:name=".ui.activities.Extras.Weather.ui.activity.MainActivity"
+            android:clearTaskOnLaunch="true"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/GeometricWeatherTheme">
+            <intent-filter>
+                <action android:name="com.amsavarthan.hify.ui.activities.Extras.Weather.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.activities.Extras.Weather.ui.activity.AlertActivity"
+            android:label="@string/action_alert"
+            android:theme="@style/GeometricWeatherTheme" />
+
+        <activity
+            android:name=".ui.activities.Extras.Weather.ui.activity.ManageActivity"
+            android:label="@string/action_manage"
+            android:theme="@style/GeometricWeatherTheme" />
+
+        <activity
+            android:name=".ui.activities.Extras.Weather.ui.activity.SearcActivity"
+            android:label="@string/action_search"
+            android:theme="@style/GeometricWeatherTheme.Search" />
+
+        <activity
+            android:name=".ui.activities.Extras.Weather.ui.activity.SettingsActivity"
+            android:label="@string/action_settings"
+            android:screenOrientation="portrait"
+            android:theme="@style/GeometricWeatherTheme" />
+
+        <!-- create widget context -->
+        <activity
+            android:name=".ui.activities.Extras.Weather.ui.activity.widget.CreateWidgetDayActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/GeometricWeatherTheme">
+            <intent-filter>
+                <action android:name="andorid.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.activities.Extras.Weather.ui.activity.widget.CreateWidgetWeekActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/GeometricWeatherTheme">
+            <intent-filter>
+                <action android:name="andorid.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.activities.Extras.Weather.ui.activity.widget.CreateWidgetDayWeekActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/GeometricWeatherTheme">
+            <intent-filter>
+                <action android:name="andorid.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.activities.Extras.Weather.ui.activity.widget.CreateWidgetClockDayHorizontalActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/GeometricWeatherTheme">
+            <intent-filter>
+                <action android:name="andorid.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.activities.Extras.Weather.ui.activity.widget.CreateWidgetClockDayDetailsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/GeometricWeatherTheme">
+            <intent-filter>
+                <action android:name="andorid.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.activities.Extras.Weather.ui.activity.widget.CreateWidgetClockDayVerticalActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/GeometricWeatherTheme">
+            <intent-filter>
+                <action android:name="andorid.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.activities.Extras.Weather.ui.activity.widget.CreateWidgetClockDayWeekActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/GeometricWeatherTheme">
+            <intent-filter>
+                <action android:name="andorid.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <!-- service -->
+        <service android:name=".ui.activities.Extras.Weather.service.NormalUpdateService" />
+        <service android:name=".ui.activities.Extras.Weather.service.TodayForecastUpdateService" />
+        <service android:name=".ui.activities.Extras.Weather.service.TomorrowForecastUpdateService" />
+        <service
+            android:name=".ui.activities.Extras.Weather.service.JobNormalUpdateService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".ui.activities.Extras.Weather.service.JobTodayForecastUpdateService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".ui.activities.Extras.Weather.service.JobTomorrowForecastUpdateService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".ui.activities.Extras.Weather.service.PollingService"
+            android:process=":polling" />
+        <service
+            android:name=".ui.activities.Extras.Weather.service.ProtectService"
+            android:process=":protect" />
+        <service
+            android:name=".ui.activities.Extras.Weather.service.TileService"
+            android:icon="@drawable/weather_sun_day_mini_light"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".ui.activities.Extras.Weather.service.CMWeatherProviderService"
+            android:permission="cyanogenmod.permission.BIND_WEATHER_PROVIDER_SERVICE">
+            <intent-filter>
+                <action android:name="cyanogenmod.weatherservice.WeatherProviderService" />
+            </intent-filter>
+            <meta-data
+                android:name="cyanogenmod.weatherservice"
+                android:resource="@xml/cm_weather_provider_options" />
+        </service>
+
+        <!-- receiver -->
+        <receiver android:name=".ui.activities.Extras.Weather.receiver.MainReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- widget -->
+        <receiver
+            android:name=".ui.activities.Extras.Weather.receiver.widget.WidgetDayProvider"
+            android:label="@string/widget_day">
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_day" />
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.ACTION_APPWIDGET_DISABLED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".ui.activities.Extras.Weather.receiver.widget.WidgetWeekProvider"
+            android:label="@string/widget_week">
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_week" />
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.ACTION_APPWIDGET_DISABLED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".ui.activities.Extras.Weather.receiver.widget.WidgetDayWeekProvider"
+            android:label="@string/widget_day_week">
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_day_week" />
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.ACTION_APPWIDGET_DISABLED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".ui.activities.Extras.Weather.receiver.widget.WidgetClockDayHorizontalProvider"
+            android:label="@string/widget_clock_day_horizontal">
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_clock_day_horizontal" />
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.ACTION_APPWIDGET_DISABLED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".ui.activities.Extras.Weather.receiver.widget.WidgetClockDayDetailsProvider"
+            android:label="@string/widget_clock_day_details">
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_clock_day_details" />
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.ACTION_APPWIDGET_DISABLED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".ui.activities.Extras.Weather.receiver.widget.WidgetClockDayVerticalProvider"
+            android:label="@string/widget_clock_day_vertical">
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_clock_day_vertical" />
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.ACTION_APPWIDGET_DISABLED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".ui.activities.Extras.Weather.receiver.widget.WidgetClockDayWeekProvider"
+            android:label="@string/widget_clock_day_week">
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_clock_day_week" />
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.ACTION_APPWIDGET_DISABLED" />
+            </intent-filter>
+        </receiver>
+
+
     </application>
 
 </manifest>

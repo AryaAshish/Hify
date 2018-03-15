@@ -2,6 +2,7 @@ package com.amsavarthan.hify.adapters;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.support.transition.TransitionManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
@@ -11,15 +12,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.amsavarthan.hify.ui.activities.AddFriends;
-import com.amsavarthan.hify.MessagesView;
-import com.amsavarthan.hify.ui.activities.FriendsView;
-import com.amsavarthan.hify.ui.activities.FriendsViewForMessage;
-import com.amsavarthan.hify.utils.CardAdapter;
-import com.amsavarthan.hify.ui.activities.ProfileView;
 import com.amsavarthan.hify.R;
 import com.amsavarthan.hify.models.CardItem;
+import com.amsavarthan.hify.ui.activities.AddFriends;
+import com.amsavarthan.hify.ui.activities.Extras.ExtrasActivity;
+import com.amsavarthan.hify.ui.activities.FriendsView;
+import com.amsavarthan.hify.ui.activities.FriendsViewForMessage;
 import com.amsavarthan.hify.ui.activities.ProfileEdit;
+import com.amsavarthan.hify.ui.activities.ProfileView;
+import com.amsavarthan.hify.utils.CardAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ import java.util.List;
 
 public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
 
+    boolean visible;
     private List<CardView> mViews;
     private List<CardItem> mData;
     private float mBaseElevation;
@@ -92,6 +94,7 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
         TextView titleTextView = (TextView) view.findViewById(R.id.titleTextView);
         TextView contentTextView = (TextView) view.findViewById(R.id.contentTextView);
         final CardView cardView=(CardView)view.findViewById(R.id.cardView);
+        final CardView cardViewButtons = (CardView) view.findViewById(R.id.card_options);
         final Button button1=(Button)view.findViewById(R.id.button1);
         Button button2=(Button)view.findViewById(R.id.button2);
         button1.setText(item.getmButtonText1());
@@ -102,12 +105,24 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
         titleTextView.setText(item.getmTextResource());
         contentTextView.setText(item.getmTitleResource());
 
+        final ViewGroup transitionsContainer = (ViewGroup) view.findViewById(R.id.layout);
+
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                TransitionManager.beginDelayedTransition(transitionsContainer);
+                visible = !visible;
+                cardViewButtons.setVisibility(visible ? View.VISIBLE : View.GONE);
+
+            }
+        });
+
         if(item.getmButtonText1().equals("View Profile")){
             button1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     ProfileView.startActivity(view.getContext());
-                   // FragmentHolder.startActivity(view.getContext(),"v_profile",cardView,activity,item.getmImageResource(),item.getmColorResource());
                 }
             });
         }else if(item.getmButtonText1().equals("My Friends")){
@@ -115,7 +130,6 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
                 @Override
                 public void onClick(View view) {
                     FriendsView.startActivity(view.getContext());
-                    // FragmentHolder.startActivity(view.getContext(),"v_friends",cardView,activity,item.getmImageResource(),item.getmColorResource());
                 }
             });
         }else if(item.getmButtonText1().equals("Send a message")){
@@ -125,8 +139,14 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
                     FriendsViewForMessage.startActivity(view.getContext());
                 }
             });
+        } else if (item.getmButtonText1().equals("Explore")) {
+            button1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ExtrasActivity.startActivity(view.getContext());
+                }
+            });
         }
-
 
         if(item.getmButtonText2().equals("Edit Profile")){
             button2.setOnClickListener(new View.OnClickListener() {

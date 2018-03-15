@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/colorPrimaryy"
     tools:context=".ui.activities.Notification.NotificationActivity">
 
     <RelativeLayout
@@ -25,7 +25,7 @@
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:src="@mipmap/profile_black"
-                app:civ_border_color="@color/colorPrimary"
+                app:civ_border_color="@color/colorPrimaryy"
                 app:civ_border_width="1dp" />
 
             <TextView

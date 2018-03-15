@@ -14,7 +14,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.OvershootInterpolator;
 import android.widget.RelativeLayout;
 
 import com.amsavarthan.hify.R;
@@ -38,8 +37,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.wasabeef.recyclerview.animators.FlipInTopXAnimator;
 import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
-import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -289,7 +288,7 @@ public class FriendsView extends AppCompatActivity {
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
                         //Friends Recyclerview
-                        mRecyclerView.setItemAnimator(new SlideInUpAnimator(new OvershootInterpolator(1f)));
+                        mRecyclerView.setItemAnimator(new FlipInTopXAnimator());
                         mRecyclerView.setLayoutManager(new LinearLayoutManager(FriendsView.this));
                         mRecyclerView.setHasFixedSize(true);
                         mRecyclerView.addItemDecoration(new DividerItemDecoration(FriendsView.this, DividerItemDecoration.VERTICAL));

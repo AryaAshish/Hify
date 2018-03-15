@@ -1,10 +1,10 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:cardUseCompatPadding="true"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fragments.ProfileFragment">
 
     <FrameLayout
@@ -12,10 +12,10 @@
         android:layout_height="match_parent">
 
         <RelativeLayout
-            android:gravity="center"
-            android:background="@drawable/fragment_background"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@drawable/fragment_background"
+            android:gravity="center">
 
             <!-- TODO: Update blank fragment layout -->
 
@@ -27,58 +27,58 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="30dp"
                 android:src="@mipmap/profile_black"
-                app:civ_border_color="@color/colorPrimary"
+                app:civ_border_color="@color/colorPrimaryy"
                 app:civ_border_width="1dp" />
 
             <TextView
+                android:id="@+id/username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/profile_pic"
-                android:padding="15dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/nunito_semibold"
                 android:gravity="center_horizontal"
-                android:textSize="20sp"
-                android:id="@+id/username"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:padding="15dp"
+                android:textSize="20sp" />
 
             <LinearLayout
-                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="20dp"
-                android:padding="20dp"
-                android:layout_alignParentBottom="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:orientation="horizontal"
+                android:padding="20dp">
 
                 <Button
                     android:id="@+id/update"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginRight="5dp"
-                    android:fontFamily="@font/nunito_semibold"
-                    android:background="@drawable/input_backgtound"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAllCaps="false"
-                    android:layout_weight="1"
-                    android:text="Update"
-                    android:textColor="@color/colorPrimary"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="5dp"
                     android:layout_marginStart="30dp"
-                    android:layout_marginEnd="5dp" />
+                    android:layout_weight="1"
+                    android:background="@drawable/input_backgtound"
+                    android:fontFamily="@font/nunito_semibold"
+                    android:text="Update"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorPrimaryy" />
 
                 <Button
                     android:id="@+id/logout"
-                    android:layout_weight="1"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="30dp"
-                    android:fontFamily="@font/nunito_semibold"
-                    android:background="@drawable/input_backgtound"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAllCaps="false"
-                    android:text="Logout"
-                    android:textColor="@color/colorPrimary"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="30dp"
                     android:layout_marginStart="5dp"
-                    android:layout_marginEnd="30dp" />
+                    android:layout_weight="1"
+                    android:background="@drawable/input_backgtound"
+                    android:fontFamily="@font/nunito_semibold"
+                    android:text="Logout"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorPrimaryy" />
 
             </LinearLayout>
 

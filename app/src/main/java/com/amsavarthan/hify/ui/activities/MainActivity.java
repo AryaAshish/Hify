@@ -59,6 +59,7 @@ import com.tapadoo.alerter.OnShowAlertListener;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -73,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser currentuser;
     private UserHelper userHelper;
+    private String colors[];
 
     private CardPagerAdapter mCardAdapter;
     private Transformer mCardShadowTransformer;
@@ -154,6 +156,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        String[] array = getResources().getStringArray(R.array.colors_array);
+
         Log.e("timeMills", String.valueOf(System.currentTimeMillis()));
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
@@ -208,10 +212,11 @@ public class MainActivity extends AppCompatActivity {
 
             //mPagerViewAdapter=new PagerViewAdapter(getSupportFragmentManager());
             mCardAdapter = new CardPagerAdapter(this);
-            mCardAdapter.addCardItem(new CardItem(R.string.posts, R.string.text_1, R.mipmap.feed_white, "#3cba54", "View Feed", "Add a new post" ));
-            mCardAdapter.addCardItem(new CardItem(R.string.messages, R.string.text_1, R.mipmap.message, "#db3236", "Send a message", "View Messages"));
-            mCardAdapter.addCardItem(new CardItem(R.string.friends, R.string.text_1, R.mipmap.friends, "#4885ed", "My Friends", "Add a Friend"));
-            mCardAdapter.addCardItem(new CardItem(R.string.profile, R.string.text_1, R.mipmap.profile, "#f4c20d", "View Profile", "Edit Profile"));
+            mCardAdapter.addCardItem(new CardItem(R.string.posts, R.string.text_1, R.mipmap.feed_white, array[new Random().nextInt(array.length)], "View Feed", "Add a new post"));
+            mCardAdapter.addCardItem(new CardItem(R.string.messages, R.string.text_1, R.mipmap.message, array[new Random().nextInt(array.length)], "Send a message", "View Messages"));
+            mCardAdapter.addCardItem(new CardItem(R.string.friends, R.string.text_1, R.mipmap.friends, array[new Random().nextInt(array.length)], "My Friends", "Add a Friend"));
+            mCardAdapter.addCardItem(new CardItem(R.string.profile, R.string.text_1, R.mipmap.profile, array[new Random().nextInt(array.length)], "View Profile", "Edit Profile"));
+            mCardAdapter.addCardItem(new CardItem(R.string.extras, R.string.text_1, R.mipmap.extras, array[new Random().nextInt(array.length)], "Explore", "View Messages"));
 
             try {
                 performUploadTask();
@@ -229,6 +234,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
 
     private void firebaseMessagingService() {
 

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/colorPrimaryy"
     tools:context=".ui.activities.MainActivity">
 
     <RelativeLayout
@@ -94,84 +94,17 @@
 
        </LinearLayout>
 
-    <ScrollView
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/mainpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/appbar"
-        android:scrollIndicators="none">
-
-        <LinearLayout
-            android:id="@+id/frame"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center">
+        android:layout_gravity="center"
+        android:clipToPadding="false"
+        android:overScrollMode="never" />
 
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/mainpager"
-                android:layout_width="match_parent"
-                android:layout_height="420dp"
-                android:layout_gravity="center"
-                android:clipToPadding="false"
-                android:overScrollMode="never"
-                android:paddingEnd="@dimen/card_padding"
-                android:paddingLeft="@dimen/card_padding"
-                android:paddingRight="@dimen/card_padding"
-                android:paddingStart="@dimen/card_padding" />
-
-            <!--LinearLayout
-                android:visibility="gone"
-                android:layout_gravity="center_horizontal|bottom"
-                android:gravity="center_horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
-
-                <TextView
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:id="@+id/profileLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/nunito_semibold"
-                    android:padding="15dp"
-                    android:text="Profile"
-                    android:textColor="#a2a2a2"
-                    android:textSize="22sp" />
-
-                <TextView
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:id="@+id/usersLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/nunito_semibold"
-                    android:padding="15dp"
-                    android:text="Friends"
-                    android:textSize="16dp"
-                    android:textColor="#c2c2c2" />
-
-                <TextView
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:id="@+id/notificationLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/nunito_semibold"
-                    android:padding="15dp"
-                    android:textSize="16dp"
-                    android:text="Messages"
-                    android:textColor="#c2c2c2" />
-
-            </LinearLayout-->
-
-        </LinearLayout>
-
-    </ScrollView>
 
 
 
