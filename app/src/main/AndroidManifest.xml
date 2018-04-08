@@ -3,9 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.amsavarthan.hify">
 
-    <uses-permission
-        android:name="android.permission.ACCESS_COARSE_LOCATION"
-        tools:ignore="ManifestOrder" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -15,12 +13,11 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
     <application
-        android:name=".ui.activities.Extras.Weather.WeatherExtra"
+        android:name=".ui.extras.Weather.WeatherExtra"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
@@ -40,15 +37,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Base.Theme.AppCompat" />
 
         <!-- baidu location -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="8Ag8g9warGQeUVFbqx4LRrXU" />
+
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
@@ -58,14 +52,11 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/api_key" />
         <meta-data
-            android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" />
-        <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/ic_launcher" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/colorAccent" />
+            android:resource="@color/colorAccentt" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -73,26 +64,18 @@
         <activity
             android:name=".ui.activities.LoginActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/LoginAppTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.activities.RegisterActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/LoginAppTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.activities.SendActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
 
-        <!--
-        service android:name=".receivers.FCMMessaging">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service
-        -->
-
-
-        <!-- Firebase Notifications -->
         <service
             android:name=".receivers.FCMService"
             android:permission="com.google.android.c2dm.permission.SEND">
@@ -106,10 +89,10 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        <!-- ./Firebase Notifications -->
 
         <activity
-            android:name=".ui.activities.Notification.NotificationActivity"
+            android:name=".ui.notification.NotificationActivity"
+            android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
@@ -121,9 +104,11 @@
         <activity
             android:name=".ui.activities.ProfileEdit"
             android:screenOrientation="portrait"
+            android:theme="@style/LoginAppTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".ui.activities.Notification.NotificationReplyActivity"
+            android:name=".ui.notification.NotificationReplyActivity"
+            android:excludeFromRecents="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.amsavarthan.hify.TARGETNOTIFICATIONREPLY" />
@@ -138,7 +123,8 @@
             android:name=".ui.activities.ImagePreview"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.Notification.NotificationImage"
+            android:name=".ui.notification.NotificationImage"
+            android:excludeFromRecents="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.amsavarthan.hify.TARGETNOTIFICATION_IMAGE" />
@@ -147,7 +133,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activities.Notification.NotificationImageReply"
+            android:name=".ui.notification.NotificationImageReply"
+            android:excludeFromRecents="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.amsavarthan.hify.TARGETNOTIFICATIONREPLY_IMAGE" />
@@ -156,16 +143,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activities.FragmentHolder"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.activities.ProfileView"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/LoginAppTheme" />
         <activity
             android:name=".ui.activities.FriendsViewForMessage"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MessagesView"
+            android:name=".ui.activities.MessagesView"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.AddFriends"
@@ -175,7 +160,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.FriendRequestActivty"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="com.amsavarthan.hify.TARGET_FRIENDREQUEST" />
 
@@ -183,129 +169,62 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activities.Extras.ExtrasActivity"
+            android:name=".ui.extras.ExtrasActivity"
             android:screenOrientation="portrait" />
 
-        <!---Weather-->
+        <!-- -Weather -->
         <activity
-            android:name=".ui.activities.Extras.Weather.ui.activity.MainActivity"
+            android:name=".ui.extras.Weather.ui.activity.MainActivity"
             android:clearTaskOnLaunch="true"
-            android:label="@string/app_name"
+            android:label="@string/app_name_weather"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/GeometricWeatherTheme">
+            android:theme="@style/HifyWeatherTheme">
             <intent-filter>
                 <action android:name="com.amsavarthan.hify.ui.activities.Extras.Weather.MAIN" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name=".ui.activities.Extras.Weather.ui.activity.AlertActivity"
+            android:name=".ui.extras.Weather.ui.activity.AlertActivity"
             android:label="@string/action_alert"
-            android:theme="@style/GeometricWeatherTheme" />
-
+            android:theme="@style/HifyWeatherTheme" />
         <activity
-            android:name=".ui.activities.Extras.Weather.ui.activity.ManageActivity"
+            android:name=".ui.extras.Weather.ui.activity.ManageActivity"
             android:label="@string/action_manage"
-            android:theme="@style/GeometricWeatherTheme" />
-
+            android:theme="@style/HifyWeatherTheme" />
         <activity
-            android:name=".ui.activities.Extras.Weather.ui.activity.SearcActivity"
+            android:name=".ui.extras.Weather.ui.activity.SearcActivity"
             android:label="@string/action_search"
-            android:theme="@style/GeometricWeatherTheme.Search" />
-
+            android:theme="@style/HifyWeatherTheme.Search" />
         <activity
-            android:name=".ui.activities.Extras.Weather.ui.activity.SettingsActivity"
+            android:name=".ui.extras.Weather.ui.activity.SettingsActivity"
             android:label="@string/action_settings"
             android:screenOrientation="portrait"
-            android:theme="@style/GeometricWeatherTheme" />
-
-        <!-- create widget context -->
-        <activity
-            android:name=".ui.activities.Extras.Weather.ui.activity.widget.CreateWidgetDayActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/GeometricWeatherTheme">
-            <intent-filter>
-                <action android:name="andorid.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".ui.activities.Extras.Weather.ui.activity.widget.CreateWidgetWeekActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/GeometricWeatherTheme">
-            <intent-filter>
-                <action android:name="andorid.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".ui.activities.Extras.Weather.ui.activity.widget.CreateWidgetDayWeekActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/GeometricWeatherTheme">
-            <intent-filter>
-                <action android:name="andorid.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".ui.activities.Extras.Weather.ui.activity.widget.CreateWidgetClockDayHorizontalActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/GeometricWeatherTheme">
-            <intent-filter>
-                <action android:name="andorid.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".ui.activities.Extras.Weather.ui.activity.widget.CreateWidgetClockDayDetailsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/GeometricWeatherTheme">
-            <intent-filter>
-                <action android:name="andorid.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".ui.activities.Extras.Weather.ui.activity.widget.CreateWidgetClockDayVerticalActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/GeometricWeatherTheme">
-            <intent-filter>
-                <action android:name="andorid.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".ui.activities.Extras.Weather.ui.activity.widget.CreateWidgetClockDayWeekActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/GeometricWeatherTheme">
-            <intent-filter>
-                <action android:name="andorid.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/HifyWeatherTheme" />
 
         <!-- service -->
-        <service android:name=".ui.activities.Extras.Weather.service.NormalUpdateService" />
-        <service android:name=".ui.activities.Extras.Weather.service.TodayForecastUpdateService" />
-        <service android:name=".ui.activities.Extras.Weather.service.TomorrowForecastUpdateService" />
+        <service android:name=".ui.extras.Weather.service.NormalUpdateService" />
+        <service android:name=".ui.extras.Weather.service.TodayForecastUpdateService" />
+        <service android:name=".ui.extras.Weather.service.TomorrowForecastUpdateService" />
         <service
-            android:name=".ui.activities.Extras.Weather.service.JobNormalUpdateService"
+            android:name=".ui.extras.Weather.service.JobNormalUpdateService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
-            android:name=".ui.activities.Extras.Weather.service.JobTodayForecastUpdateService"
+            android:name=".ui.extras.Weather.service.JobTodayForecastUpdateService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
-            android:name=".ui.activities.Extras.Weather.service.JobTomorrowForecastUpdateService"
+            android:name=".ui.extras.Weather.service.JobTomorrowForecastUpdateService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
-            android:name=".ui.activities.Extras.Weather.service.PollingService"
+            android:name=".ui.extras.Weather.service.PollingService"
             android:process=":polling" />
         <service
-            android:name=".ui.activities.Extras.Weather.service.ProtectService"
+            android:name=".ui.extras.Weather.service.ProtectService"
             android:process=":protect" />
         <service
-            android:name=".ui.activities.Extras.Weather.service.TileService"
+            android:name=".ui.extras.Weather.service.TileService"
             android:icon="@drawable/weather_sun_day_mini_light"
             android:label="@string/app_name"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
@@ -313,111 +232,117 @@
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
         </service>
-
         <service
-            android:name=".ui.activities.Extras.Weather.service.CMWeatherProviderService"
+            android:name=".ui.extras.Weather.service.CMWeatherProviderService"
             android:permission="cyanogenmod.permission.BIND_WEATHER_PROVIDER_SERVICE">
             <intent-filter>
                 <action android:name="cyanogenmod.weatherservice.WeatherProviderService" />
             </intent-filter>
+
             <meta-data
                 android:name="cyanogenmod.weatherservice"
                 android:resource="@xml/cm_weather_provider_options" />
         </service>
 
         <!-- receiver -->
-        <receiver android:name=".ui.activities.Extras.Weather.receiver.MainReceiver">
+        <receiver android:name=".ui.extras.Weather.receiver.MainReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
-        <!-- widget -->
-        <receiver
-            android:name=".ui.activities.Extras.Weather.receiver.widget.WidgetDayProvider"
-            android:label="@string/widget_day">
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_day" />
+        <!-- reminder -->
+
+        <activity
+            android:name=".ui.extras.Planner.activities.MainActivity"
+            android:label="@string/app_name_planner"
+            android:theme="@style/StartTheme" />
+        <activity
+            android:name=".ui.extras.Planner.activities.CreateEditActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/AppThemeLight" />
+        <activity
+            android:name=".ui.extras.Planner.activities.ViewActivity"
+            android:theme="@style/AppThemeLight" />
+        <activity
+            android:name=".ui.extras.Planner.activities.PreferenceActivity"
+            android:label="@string/settings"
+            android:theme="@style/ReminderAppTheme" />
+        <activity
+            android:name=".ui.extras.Planner.activities.SnoozeDialogActivity"
+            android:excludeFromRecents="true"
+            android:taskAffinity=""
+            android:theme="@style/AppThemeTransparent" />
+        <activity
+            android:name=".ui.extras.Planner.activities.shortcut.CreateEditShortcut"
+            android:configChanges="orientation|screenSize"
+            android:excludeFromRecents="true"
+            android:theme="@style/AppThemeDialog">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="android.appwidget.action.ACTION_APPWIDGET_DISABLED" />
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ui.extras.Planner.activities.shortcut.ShortcutActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <receiver android:name=".ui.extras.Planner.receivers.AlarmReceiver" />
+        <receiver android:name=".ui.extras.Planner.receivers.SnoozeActionReceiver" />
+        <receiver android:name=".ui.extras.Planner.receivers.SnoozeReceiver" />
+        <receiver android:name=".ui.extras.Planner.receivers.DismissReceiver" />
+        <receiver android:name=".ui.extras.Planner.receivers.NagReceiver" />
+        <receiver
+            android:name=".ui.extras.Planner.receivers.BootReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
 
-        <receiver
-            android:name=".ui.activities.Extras.Weather.receiver.widget.WidgetWeekProvider"
-            android:label="@string/widget_week">
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_week" />
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="android.appwidget.action.ACTION_APPWIDGET_DISABLED" />
+        <activity
+            android:name=".ui.activities.About"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.AddUserDetail"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.extras.OurStreets.activity.MainActivity"
+            android:label="@string/app_name_world"
+            android:theme="@style/OurStreets">
+            <intent-filter tools:ignore="GoogleAppIndexingWarning">
+                <action android:name="android.intent.action.VIEW" />
             </intent-filter>
-        </receiver>
-
-        <receiver
-            android:name=".ui.activities.Extras.Weather.receiver.widget.WidgetDayWeekProvider"
-            android:label="@string/widget_day_week">
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_day_week" />
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="android.appwidget.action.ACTION_APPWIDGET_DISABLED" />
-            </intent-filter>
-        </receiver>
-
-        <receiver
-            android:name=".ui.activities.Extras.Weather.receiver.widget.WidgetClockDayHorizontalProvider"
-            android:label="@string/widget_clock_day_horizontal">
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_clock_day_horizontal" />
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="android.appwidget.action.ACTION_APPWIDGET_DISABLED" />
-            </intent-filter>
-        </receiver>
-
-        <receiver
-            android:name=".ui.activities.Extras.Weather.receiver.widget.WidgetClockDayDetailsProvider"
-            android:label="@string/widget_clock_day_details">
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_clock_day_details" />
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="android.appwidget.action.ACTION_APPWIDGET_DISABLED" />
-            </intent-filter>
-        </receiver>
-
-        <receiver
-            android:name=".ui.activities.Extras.Weather.receiver.widget.WidgetClockDayVerticalProvider"
-            android:label="@string/widget_clock_day_vertical">
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_clock_day_vertical" />
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="android.appwidget.action.ACTION_APPWIDGET_DISABLED" />
-            </intent-filter>
-        </receiver>
-
-        <receiver
-            android:name=".ui.activities.Extras.Weather.receiver.widget.WidgetClockDayWeekProvider"
-            android:label="@string/widget_clock_day_week">
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_clock_day_week" />
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="android.appwidget.action.ACTION_APPWIDGET_DISABLED" />
-            </intent-filter>
-        </receiver>
-
-
+        </activity>
+        <activity
+            android:name=".ui.activities.SearchUsersActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.activities.UserDetail"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.activities.PostText"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.activities.CommentsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.activities.PostImage"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>
 
 </manifest>

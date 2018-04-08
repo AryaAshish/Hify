@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryy"
+    android:paddingTop="30dp"
     tools:context="com.amsavarthan.hify.ui.activities.FriendsView"
     tools:ignore="MissingPrefix">
 
@@ -16,20 +17,10 @@
         android:orientation="horizontal"
         android:padding="5dp">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/logo"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:src="@mipmap/logo"
-            android:transitionName="@string/transition_name" />
-
         <TextView
             fontPath="fonts/bold.ttf"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:gravity="center_vertical"
             android:text="My Friends"

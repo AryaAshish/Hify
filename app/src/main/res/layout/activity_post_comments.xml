@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF"
+    android:orientation="vertical"
+    android:paddingTop="30dp">
+
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:drawablePadding="10dp"
+        android:drawableStart="@drawable/ic_comment_liked"
+        android:paddingBottom="5dp"
+        android:paddingStart="10dp"
+        android:paddingTop="10dp"
+        android:text="Comments"
+        android:textColor="#212121"
+        android:textSize="18sp" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:indeterminate="true"
+        android:visibility="invisible" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/progressBar"
+        android:layout_marginBottom="55dp" />
+
+    <RelativeLayout
+        android:id="@+id/comment_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/send"
+            android:background="@drawable/input_light_white_square"
+            android:hint="Comment as ...."
+            android:inputType="textCapSentences"
+            android:paddingBottom="15dp"
+            android:paddingEnd="25dp"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:paddingStart="25dp"
+            android:paddingTop="15dp"
+            android:singleLine="true" />
+
+        <Button
+            android:id="@+id/send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/input_light_accent_square"
+            android:drawableStart="@drawable/ic_send_white_24dp"
+            android:gravity="center"
+            android:paddingBottom="15dp"
+            android:paddingEnd="25dp"
+            android:paddingStart="20dp"
+            android:paddingTop="15dp"
+            android:singleLine="true"
+            android:text=" Send"
+            android:textColor="#FFF" />
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

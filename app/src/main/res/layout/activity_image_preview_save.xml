@@ -11,21 +11,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <android.support.design.widget.FloatingActionButton
+    <Button
         android:id="@+id/saveImage"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="18dp"
-        android:layout_marginEnd="22dp"
-        android:layout_marginRight="22dp"
+        android:background="@color/blackOverlay"
         android:clickable="true"
         android:focusable="true"
         android:onClick="saveImage"
         android:padding="16dp"
-        android:src="@drawable/ic_file_download_black_24dp" />
+        android:src="@drawable/ic_file_download_black_24dp"
+        android:text="Save Image"
+        android:textColor="@color/colorPrimaryy" />
 
 
 </RelativeLayout>

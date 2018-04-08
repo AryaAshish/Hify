@@ -19,10 +19,10 @@ import android.util.Log;
 import com.amsavarthan.hify.R;
 import com.amsavarthan.hify.ui.activities.FriendRequestActivty;
 import com.amsavarthan.hify.ui.activities.MainActivity;
-import com.amsavarthan.hify.ui.activities.Notification.NotificationActivity;
-import com.amsavarthan.hify.ui.activities.Notification.NotificationImage;
-import com.amsavarthan.hify.ui.activities.Notification.NotificationImageReply;
-import com.amsavarthan.hify.ui.activities.Notification.NotificationReplyActivity;
+import com.amsavarthan.hify.ui.notification.NotificationActivity;
+import com.amsavarthan.hify.ui.notification.NotificationImage;
+import com.amsavarthan.hify.ui.notification.NotificationImageReply;
+import com.amsavarthan.hify.ui.notification.NotificationReplyActivity;
 
 import java.io.IOException;
 import java.io.InputStream;

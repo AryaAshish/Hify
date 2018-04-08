@@ -1,7 +1,5 @@
 package com.amsavarthan.hify.ui.activities;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +8,6 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 
 import com.amsavarthan.hify.R;
 import com.amsavarthan.hify.adapters.UsersAdapter;
@@ -62,50 +59,45 @@ public class FriendsViewForMessage extends AppCompatActivity {
                             return;
                         }
 
-                        try {
-                            for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
-                                final String userId = doc.getDocument().getId();
-                                if (doc.getType() == DocumentChange.Type.ADDED) {
-                                    Log.i("Users", userId);
+                        for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
+                            final String userId = doc.getDocument().getId();
+                            if (doc.getType() == DocumentChange.Type.ADDED) {
+                                Log.i("Users", userId);
 
-                                    firestore.collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                                firestore.collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
 
-                                            if (e != null) {
-                                                Log.w("Error", "listen:error", e);
-                                                return;
-                                            }
+                                        if (e != null) {
+                                            Log.w("Error", "listen:error", e);
+                                            return;
+                                        }
 
-                                            for (final DocumentChange doc : documentSnapshots.getDocumentChanges()) {
-                                                String Uid = doc.getDocument().getId();
-                                                if (doc.getType() == DocumentChange.Type.ADDED) {
+                                        for (final DocumentChange doc : documentSnapshots.getDocumentChanges()) {
+                                            String Uid = doc.getDocument().getId();
+                                            if (doc.getType() == DocumentChange.Type.ADDED) {
 
-                                                    Log.w("ADDED", doc.getDocument().getData().toString());
+                                                Log.w("ADDED", doc.getDocument().getData().toString());
 
-                                                    firestore.collection("Users").document(Uid).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                        @Override
-                                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                            if (documentSnapshot.get("email").equals(userId)) {
-                                                                Log.i("Uid", documentSnapshot.getId());
-                                                                Users users = new Users(documentSnapshot.getString("name"), documentSnapshot.getString("image")).withId(documentSnapshot.getId());
-                                                                usersList.add(users);
-                                                                usersAdapter.notifyDataSetChanged();
-                                                            }
+                                                firestore.collection("Users").document(Uid).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                        if (documentSnapshot.get("email").equals(userId)) {
+                                                            Log.i("Uid", documentSnapshot.getId());
+                                                            Users users = new Users(documentSnapshot.getString("name"), documentSnapshot.getString("image")).withId(documentSnapshot.getId());
+                                                            usersList.add(users);
+                                                            usersAdapter.notifyDataSetChanged();
                                                         }
-                                                    });
+                                                    }
+                                                });
 
-                                                }
                                             }
                                         }
-                                    });
-                                }
+                                    }
+                                });
                             }
-                        } catch (Exception ex) {
-                            Log.e("Error: ", ".." + ex.getLocalizedMessage());
-
                         }
-                        stopListening();
+
                     }
                 });
             } catch (Exception e) {
@@ -149,25 +141,13 @@ public class FriendsViewForMessage extends AppCompatActivity {
 
         mRecyclerView = (RecyclerView)findViewById(R.id.usersList);
 
-        mRecyclerView.setVisibility(View.VISIBLE);
-        mRecyclerView.setAlpha(0.0f);
         usersList = new ArrayList<>();
         usersAdapter = new UsersAdapter(usersList, this);
-        mRecyclerView.animate()
-                .translationY(mRecyclerView.getHeight())
-                .alpha(1.0f)
-                .setDuration(500)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-                        mRecyclerView.setItemAnimator(new FlipInTopXAnimator());
-                        mRecyclerView.setLayoutManager(new LinearLayoutManager(FriendsViewForMessage.this));
-                        mRecyclerView.setHasFixedSize(true);
-                        mRecyclerView.addItemDecoration(new DividerItemDecoration(FriendsViewForMessage.this, DividerItemDecoration.VERTICAL));
-                        mRecyclerView.setAdapter(usersAdapter);
-                    }
-                });
+        mRecyclerView.setItemAnimator(new FlipInTopXAnimator());
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(FriendsViewForMessage.this));
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(FriendsViewForMessage.this, DividerItemDecoration.VERTICAL));
+        mRecyclerView.setAdapter(usersAdapter);
 
         startListening();
     }
@@ -182,17 +162,35 @@ public class FriendsViewForMessage extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         stopListening();
-        mRecyclerView.animate()
-                .translationY(0)
-                .alpha(0.0f)
-                .setDuration(500)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-                        finish();
-                    }
-                });
-
+        finish();
+        overridePendingTransitionExit();
     }
+
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransitionExit();
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        overridePendingTransitionEnter();
+    }
+
+    /**
+     * Overrides the pending Activity transition by performing the "Enter" animation.
+     */
+    protected void overridePendingTransitionEnter() {
+        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+    }
+
+    /**
+     * Overrides the pending Activity transition by performing the "Exit" animation.
+     */
+    protected void overridePendingTransitionExit() {
+        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
+    }
+
 }

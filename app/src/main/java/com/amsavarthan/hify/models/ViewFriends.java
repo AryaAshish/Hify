@@ -7,19 +7,16 @@ package com.amsavarthan.hify.models;
 public class ViewFriends {
 
     private String id, name, image, email, token_id;
-    private boolean accepted;
 
     public ViewFriends() {
-
     }
 
-    public ViewFriends(String id, String name, String image, String email, String token_id, boolean accepted) {
+    public ViewFriends(String id, String name, String image, String email, String token_id) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.email = email;
         this.token_id = token_id;
-        this.accepted = accepted;
     }
 
     public String getId() {
@@ -62,11 +59,4 @@ public class ViewFriends {
         this.token_id = token_id;
     }
 
-    public boolean isAccepted() {
-        return accepted;
-    }
-
-    public void setAccepted(boolean accepted) {
-        this.accepted = accepted;
-    }
 }

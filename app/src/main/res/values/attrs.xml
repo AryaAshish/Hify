@@ -16,4 +16,8 @@
         <attr name="drawable_res_off" format="reference" />
     </declare-styleable>
 
+    <declare-styleable name="DrawInsetsFrameLayout">
+        <attr name="insetBackground" format="color|reference" />
+    </declare-styleable>
+
 </resources>

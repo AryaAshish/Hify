@@ -6,7 +6,7 @@
     android:background="@color/colorPrimaryy"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="?attr/selectableItemBackground"
+    android:foreground="?selectableItemBackground"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -19,9 +19,9 @@
             android:id="@+id/delete_icon"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:src="@drawable/ic_person_add_white_24dp" />
 
         <TextView
@@ -29,8 +29,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@id/delete_icon"
+            android:layout_marginEnd="10dp"
+            android:layout_toStartOf="@id/delete_icon"
             android:text="Add as friend"
             android:textColor="#fff"
             android:textSize="13dp" />
@@ -48,26 +48,24 @@
             android:id="@+id/image"
             android:layout_width="60dp"
             android:layout_height="80dp"
-            android:src="@mipmap/profile_black"
+            android:src="@drawable/default_user_art_g_2"
             app:civ_border_color="@color/colorPrimaryy"
-            app:civ_border_width="1dp" />
+            app:civ_border_width="0dp" />
 
         <LinearLayout
             android:id="@+id/linearLayout"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="15dp"
+            android:layout_centerVertical="true"
             android:layout_marginStart="15dp"
             android:layout_toEndOf="@+id/image"
-            android:layout_toRightOf="@+id/image"
+            android:layout_toStartOf="@+id/exist_icon"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/nunito_semibold"
                 android:text="@string/loading_name"
                 android:textColor="#212121"
                 android:textSize="16sp" />
@@ -76,11 +74,39 @@
                 android:id="@+id/email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/nunito_semibold"
                 android:text="Loading email.." />
 
 
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/exist_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:background="?selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="10dp"
+            android:src="@drawable/ic_call_made_black_24dp"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/friend_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:background="?selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="10dp"
+            android:src="@drawable/ic_friend"
+            android:visibility="gone" />
+
 
     </RelativeLayout>
 

@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import com.amsavarthan.hify.ui.activities.AddUserDetail;
 import com.amsavarthan.hify.ui.activities.FriendRequestActivty;
 import com.amsavarthan.hify.ui.activities.MainActivity;
-import com.amsavarthan.hify.ui.activities.Notification.NotificationActivity;
-import com.amsavarthan.hify.ui.activities.Notification.NotificationImage;
-import com.amsavarthan.hify.ui.activities.Notification.NotificationImageReply;
-import com.amsavarthan.hify.ui.activities.Notification.NotificationReplyActivity;
+import com.amsavarthan.hify.ui.activities.UserDetail;
+import com.amsavarthan.hify.ui.notification.NotificationActivity;
+import com.amsavarthan.hify.ui.notification.NotificationImage;
+import com.amsavarthan.hify.ui.notification.NotificationImageReply;
+import com.amsavarthan.hify.ui.notification.NotificationReplyActivity;
 import com.amsavarthan.hify.utils.NotificationUtil;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -43,7 +45,7 @@ public class FCMService extends FirebaseMessagingService {
         String from_id = remoteMessage.getData().get("from_id");
         final String imageUrl = remoteMessage.getData().get("image");
         String reply_for = remoteMessage.getData().get("reply_for");
-        long id = Long.parseLong(remoteMessage.getData().get("notification_id"));
+        long id = System.currentTimeMillis();
         String timeStamp = String.valueOf(remoteMessage.getData().get("timestamp"));
 
         //Friend Request Notification data
@@ -75,8 +77,18 @@ public class FCMService extends FirebaseMessagingService {
 
             resultIntent = new Intent(getApplicationContext(), FriendRequestActivty.class);
 
+        } else if (click_action.equals("com.amsavarthan.hify.TARGET_ACCEPTED")) {
+
+            resultIntent = new Intent(getApplicationContext(), UserDetail.class);
+
+        } else if (click_action.equals("com.amsavarthan.hify.TARGET_DECLINED")) {
+
+            resultIntent = new Intent(getApplicationContext(), AddUserDetail.class);
+
         } else {
+
             resultIntent = new Intent(getApplicationContext(), MainActivity.class);
+
         }
 
         resultIntent.putExtra("title", title);

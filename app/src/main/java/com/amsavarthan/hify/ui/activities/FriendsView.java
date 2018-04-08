@@ -1,8 +1,5 @@
 package com.amsavarthan.hify.ui.activities;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
-import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.amsavarthan.hify.R;
@@ -56,7 +52,6 @@ public class FriendsView extends AppCompatActivity {
     private ListenerRegistration mRegistration, mRegistrationRequest;
     private Query mQuery, mRequestQuery;
     private RelativeLayout mLayout;
-    private ProgressDialog mDialog;
 
     public static void startActivity(Context context) {
         Intent intent = new Intent(context, FriendsView.class);
@@ -86,6 +81,7 @@ public class FriendsView extends AppCompatActivity {
     public void startListening() {
         try {
             if (mQuery != null && mRegistration == null) {
+
                 mRegistration = mQuery.addSnapshotListener(this, new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
@@ -97,9 +93,7 @@ public class FriendsView extends AppCompatActivity {
                         try {
                             for (final DocumentChange doc : documentSnapshots.getDocumentChanges()) {
                                 final String userId = doc.getDocument().getId();
-                                final boolean accepted = doc.getDocument().getBoolean("accepted");
                                 if (doc.getType() == DocumentChange.Type.ADDED) {
-                                    Log.i("Users", userId);
                                     firestore.collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() {
                                         @Override
                                         public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
@@ -116,15 +110,9 @@ public class FriendsView extends AppCompatActivity {
                                                         firestore.collection("Users").document(Uid).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                                             @Override
                                                             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                                if (documentSnapshot.get("email").equals(userId)) {
+                                                                if (documentSnapshot.get("id").equals(userId)) {
 
-                                                                    ViewFriends users = new ViewFriends(
-                                                                            Uid,
-                                                                            documentSnapshot.getString("name"),
-                                                                            documentSnapshot.getString("image"),
-                                                                            documentSnapshot.getString("email"),
-                                                                            documentSnapshot.getString("token_id"),
-                                                                            accepted);
+                                                                    ViewFriends users = documentSnapshot.toObject(ViewFriends.class);
                                                                     usersList.add(users);
                                                                     usersAdapter.notifyDataSetChanged();
 
@@ -139,7 +127,6 @@ public class FriendsView extends AppCompatActivity {
                                     });
                                 }
                             }
-                            mDialog.dismiss();
                         } catch (Exception ex) {
                             Log.e("Error: ", ".." + ex.getLocalizedMessage());
 
@@ -162,32 +149,28 @@ public class FriendsView extends AppCompatActivity {
                     @Override
                     public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
 
+                        if (e != null) {
+                            Log.w("Error", "listen:error", e);
+                        }
+
                         for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
                             if (doc.getType() == DocumentChange.Type.ADDED) {
 
-                                if (!doc.getDocument().getBoolean("accepted")) {
-                                    FriendRequest request = new FriendRequest(
-                                            doc.getDocument().getString("id"),
-                                            doc.getDocument().getString("name"),
-                                            doc.getDocument().getString("image"),
-                                            doc.getDocument().getId(),
-                                            doc.getDocument().getString("token")
-                                    );
-                                    requestList.add(request);
-                                    requestAdapter.notifyDataSetChanged();
-                                }
+                                FriendRequest friendRequest = doc.getDocument().toObject(FriendRequest.class).withId(doc.getDocument().getId());
+                                requestList.add(friendRequest);
+                                requestAdapter.notifyDataSetChanged();
 
                             }
                         }
-                        mDialog.dismiss();
 
                     }
                 });
 
-
             }
 
+
         } catch (Exception ex) {
+            Log.e("Error: ", ".." + ex.getLocalizedMessage());
 
         }
     }
@@ -195,7 +178,6 @@ public class FriendsView extends AppCompatActivity {
     public void getUsers() {
         usersList.clear();
         requestList.clear();
-        mDialog.show();
 
         mQuery = firestore.collection("Users").document(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .collection("Friends");
@@ -204,18 +186,6 @@ public class FriendsView extends AppCompatActivity {
 
         startListening();
         startListeningRequest();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        stopListening();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getUsers();
     }
 
     @Override
@@ -235,12 +205,6 @@ public class FriendsView extends AppCompatActivity {
         );
 
         activity = this;
-
-        mDialog = new ProgressDialog(this);
-        mDialog.setMessage("Please wait..");
-        mDialog.setIndeterminate(true);
-        mDialog.setCanceledOnTouchOutside(false);
-        mDialog.setCancelable(false);
 
         firestore = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -271,60 +235,64 @@ public class FriendsView extends AppCompatActivity {
         });
 
 
-        mLayout.setVisibility(View.VISIBLE);
-        mLayout.setAlpha(0.0f);
-
         usersList = new ArrayList<>();
         requestList = new ArrayList<>();
         usersAdapter = new ViewFriendAdapter(usersList, this);
-        requestAdapter = new FriendRequestAdapter(requestList, this);
+        requestAdapter = new FriendRequestAdapter(requestList, this, this);
 
-        mLayout.animate()
-                .translationY(mLayout.getHeight())
-                .alpha(1.0f)
-                .setDuration(500)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-                        //Friends Recyclerview
-                        mRecyclerView.setItemAnimator(new FlipInTopXAnimator());
-                        mRecyclerView.setLayoutManager(new LinearLayoutManager(FriendsView.this));
-                        mRecyclerView.setHasFixedSize(true);
-                        mRecyclerView.addItemDecoration(new DividerItemDecoration(FriendsView.this, DividerItemDecoration.VERTICAL));
-                        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
-                        mRecyclerView.setAdapter(usersAdapter);
+        //Friends Recyclerview
+        mRecyclerView.setItemAnimator(new FlipInTopXAnimator());
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(FriendsView.this));
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(FriendsView.this, DividerItemDecoration.VERTICAL));
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
+        mRecyclerView.setAdapter(usersAdapter);
 
-                        //FriendRequest Recyclerview
-                        mRequestView.setItemAnimator(new SlideInLeftAnimator());
-                        mRequestView.setLayoutManager(new LinearLayoutManager(FriendsView.this, LinearLayoutManager.HORIZONTAL, false));
-                        mRequestView.setHasFixedSize(true);
-                        mRequestView.setAdapter(requestAdapter);
-                    }
-                });
+        //FriendRequest Recyclerview
+        mRequestView.setItemAnimator(new SlideInLeftAnimator());
+        mRequestView.setLayoutManager(new LinearLayoutManager(FriendsView.this, LinearLayoutManager.HORIZONTAL, false));
+        mRequestView.setHasFixedSize(true);
+        mRequestView.setAdapter(requestAdapter);
+
         getUsers();
 
+    }
+
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransitionExit();
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        overridePendingTransitionEnter();
+    }
+
+    /**
+     * Overrides the pending Activity transition by performing the "Enter" animation.
+     */
+    public void overridePendingTransitionEnter() {
+        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+    }
+
+    /**
+     * Overrides the pending Activity transition by performing the "Exit" animation.
+     */
+    protected void overridePendingTransitionExit() {
+        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         stopListening();
-        mLayout.animate()
-                .translationY(0)
-                .alpha(0.0f)
-                .setDuration(500)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-                        finish();
-                        usersList.clear();
-                        requestList.clear();
-                        mLayout.setVisibility(View.INVISIBLE);
-                    }
-                });
-
+        finish();
+        overridePendingTransitionExit();
+        usersList.clear();
+        requestList.clear();
     }
 }
 

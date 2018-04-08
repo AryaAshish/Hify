@@ -1,6 +1,7 @@
 package com.amsavarthan.hify.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.amsavarthan.hify.R;
-import com.amsavarthan.hify.ui.activities.SendActivity;
 import com.amsavarthan.hify.models.Users;
+import com.amsavarthan.hify.ui.activities.SendActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -31,23 +32,21 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
         this.context = context;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.user_item_list,parent,false);
 
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         holder.name.setText(usersList.get(position).getName());
 
-        RequestOptions placeholderOprions=new RequestOptions();
-        placeholderOprions.placeholder(context.getResources().getDrawable(R.mipmap.profile_black));
-
         Glide.with(context)
-                .setDefaultRequestOptions(placeholderOprions)
+                .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.default_user_art_g_2))
                 .load(usersList.get(position).getImage())
                 .into(holder.image);
 
@@ -78,8 +77,8 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
             super(itemView);
 
             mView=itemView;
-            image=(CircleImageView)mView.findViewById(R.id.image);
-            name=(TextView)mView.findViewById(R.id.name);
+            image = mView.findViewById(R.id.image);
+            name = mView.findViewById(R.id.name);
 
         }
     }

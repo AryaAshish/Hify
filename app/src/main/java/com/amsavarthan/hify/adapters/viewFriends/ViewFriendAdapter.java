@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.amsavarthan.hify.R;
 import com.amsavarthan.hify.models.ViewFriends;
+import com.amsavarthan.hify.ui.activities.UserDetail;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.github.javiersantos.bottomdialogs.BottomDialog;
@@ -61,9 +62,16 @@ public class ViewFriendAdapter extends RecyclerView.Adapter<ViewFriendAdapter.Vi
         userId = usersList.get(position).getId();
 
         Glide.with(context)
-                .setDefaultRequestOptions(new RequestOptions().placeholder(context.getResources().getDrawable(R.mipmap.profile_black)))
+                .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.default_user_art_g_2))
                 .load(usersList.get(position).getImage())
                 .into(holder.image);
+
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UserDetail.startActivity(context, usersList.get(position).getId(), usersList.get(position).getName(), usersList.get(position).getEmail(), usersList.get(position).getImage(), usersList.get(position).getToken_id());
+            }
+        });
 
     }
 
@@ -119,7 +127,7 @@ public class ViewFriendAdapter extends RecyclerView.Adapter<ViewFriendAdapter.Vi
                 .setTitle("Unfriend " + usersList.get(position).getName())
                 .setContent("Are you sure do you want to remove " + usersList.get(position).getName() + " from your friend list?")
                 .setPositiveText("Yes")
-                .setPositiveBackgroundColorResource(R.color.colorAccent)
+                .setPositiveBackgroundColorResource(R.color.colorAccentt)
                 .setNegativeText("No")
                 .setCancelable(false)
                 .onPositive(new BottomDialog.ButtonCallback() {
@@ -153,15 +161,6 @@ public class ViewFriendAdapter extends RecyclerView.Adapter<ViewFriendAdapter.Vi
                         .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        /*snackbar.setAction("UNDO", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                // undo is selected, restore the deleted item
-                                restoreItem(deletedItem, deletedIndex);
-                            }
-                        });
-                        snackbar.setActionTextColor(context.getResources().getColor(R.color.colorAccent));
-                        snackbar.show();*/
                         usersList.remove(position);
                         notifyItemRemoved(position);
                     }
@@ -201,7 +200,6 @@ public class ViewFriendAdapter extends RecyclerView.Adapter<ViewFriendAdapter.Vi
             viewBackground = (RelativeLayout) mView.findViewById(R.id.view_background);
             viewForeground = (RelativeLayout) mView.findViewById(R.id.view_foreground);
             listenerText = (TextView) mView.findViewById(R.id.view_foreground_text);
-
 
         }
     }

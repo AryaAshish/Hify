@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimaryy">#FFFFFF</color>
     <color name="colorPrimaryDarkk">#FFFFFF</color>
-    <color name="colorAccentt">#2591FC</color>
+    <color name="colorAccentt">#5093FF</color>
 
     <color name="colorPrimary">#212121</color>
     <color name="colorPrimaryDark">#1a1a1a</color>
@@ -44,5 +44,32 @@
     <color name="colorLevel_4">#e52f35</color>
     <color name="colorLevel_5">#99004c</color>
     <color name="colorLevel_6">#7e0023</color>
+
+    <color name="primary">#1de9b6</color>
+    <color name="primaryDark">#00bfa5</color>
+    <color name="accent">#FF5252</color>
+    <color name="accentLight">#FF5252</color>
+    <color name="background">#eeeeee</color>
+    <color name="lightGray">#e6e6e6</color>
+    <color name="textLightGray">#8f8f8f</color>
+    <color name="textGreyHeader">#ff818181</color>
+    <color name="notificationContentText">#737373</color>
+    <color name="error">#da1b21</color>
+    <color name="iconTint">#8e8e8e</color>
+    <color name="default_colour_grey">#8e8e8e</color>
+    <color name="emptyColour">#bababa</color>
+    <color name="NotificationTitle">#ffffff</color>
+
+    //world360
+    <color name="blue_grey_900">#263238</color>
+    <color name="blue_grey_800">#37474F</color>
+    <color name="blue_grey_600">#59737F</color>
+    <color name="status_bar_color">#3C263238</color>
+    <color name="foreground">#F5F5F5</color>
+    <color name="backgroundd">@color/blue_grey_900</color>
+    <color name="theme_accent">#FF3D00</color>
+    <color name="ripple">#33FFFFFF</color>
+    <color name="textColorSecondary">#757575</color>
+    <color name="textColorPrimary">#212121</color>
 
 </resources>

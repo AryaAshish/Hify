@@ -2,30 +2,23 @@ package com.amsavarthan.hify.ui.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
-import android.widget.RelativeLayout;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.amsavarthan.hify.R;
 import com.amsavarthan.hify.utils.database.UserHelper;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -33,14 +26,12 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class ProfileView extends AppCompatActivity {
 
-    public static Activity activity;
     TextView name, email, friends;
     CircleImageView profilePic;
     FirebaseAuth mAuth;
     FirebaseFirestore mFirestore;
-    RelativeLayout mRelativeLayout;
+    FrameLayout mFrameLayout;
     UserHelper userHelper;
-    private int id_To_Update=0;
     private String imag;
 
     public static void startActivity(Context context){
@@ -51,7 +42,8 @@ public class ProfileView extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        mRelativeLayout.animate()
+
+        mFrameLayout.animate()
                 .translationY(0)
                 .alpha(0.0f)
                 .setDuration(500)
@@ -59,8 +51,9 @@ public class ProfileView extends AppCompatActivity {
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
-                        mRelativeLayout.setVisibility(View.GONE);
+                        mFrameLayout.setVisibility(View.GONE);
                         finish();
+                        overridePendingTransitionExit();
                     }
                 });
     }
@@ -68,6 +61,31 @@ public class ProfileView extends AppCompatActivity {
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Cursor rs = userHelper.getData(1);
+        rs.moveToFirst();
+
+        String nam = rs.getString(rs.getColumnIndex(UserHelper.CONTACTS_COLUMN_NAME));
+        String emai = rs.getString(rs.getColumnIndex(UserHelper.CONTACTS_COLUMN_EMAIL));
+        imag = rs.getString(rs.getColumnIndex(UserHelper.CONTACTS_COLUMN_IMAGE));
+
+        if (!rs.isClosed()) {
+            rs.close();
+        }
+
+        name.setText(nam);
+        email.setText(emai);
+
+        Glide.with(ProfileView.this)
+                .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.default_user_art_g_6))
+                .load(imag)
+                .into(profilePic);
+
+
     }
 
     @Override
@@ -81,16 +99,14 @@ public class ProfileView extends AppCompatActivity {
                 .build()
         );
 
-        activity = this;
-
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
 
-        name = (TextView) findViewById(R.id.username);
-        mRelativeLayout = (RelativeLayout) findViewById(R.id.layout);
-        email = (TextView) findViewById(R.id.email);
-        friends = (TextView) findViewById(R.id.friends);
-        profilePic = (CircleImageView) findViewById(R.id.profile_pic);
+        name = findViewById(R.id.username);
+        mFrameLayout = findViewById(R.id.layout);
+        email = findViewById(R.id.email);
+        friends = findViewById(R.id.friends);
+        profilePic = findViewById(R.id.profile_pic);
 
         mFirestore.collection("Users").document(mAuth.getCurrentUser().getUid()).collection("Friends").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -99,19 +115,9 @@ public class ProfileView extends AppCompatActivity {
             }
         });
 
-        profilePic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(ProfileView.this,ImagePreviewSave.class)
-                        .putExtra("url",imag);
-                startActivity(intent);
-
-            }
-        });
-
         userHelper = new UserHelper(this);
-        mRelativeLayout.setVisibility(View.VISIBLE);
-        mRelativeLayout.setAlpha(0.0f);
+        mFrameLayout.setVisibility(View.VISIBLE);
+        mFrameLayout.setAlpha(0.0f);
 
         Cursor rs = userHelper.getData(1);
         rs.moveToFirst();
@@ -128,42 +134,58 @@ public class ProfileView extends AppCompatActivity {
         email.setText(emai);
 
         Glide.with(ProfileView.this)
-                .setDefaultRequestOptions(new RequestOptions().placeholder(R.mipmap.profile_black))
+                .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.default_user_art_g_6))
                 .load(imag)
                 .into(profilePic);
 
-        userHelper.close();
 
-        mRelativeLayout.animate()
+        mFrameLayout.animate()
                 .setDuration(500)
-                .translationY(mRelativeLayout.getHeight())
+                .translationY(mFrameLayout.getHeight())
                 .alpha(1.0f);
+
+        profilePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ProfileView.this, ImagePreviewSave.class)
+                        .putExtra("url", imag);
+                startActivity(intent);
+
+            }
+        });
+
     }
 
-    public void logout(View view) {
 
-        try {
-            Map<String, Object> tokenRemove = new HashMap<>();
-            tokenRemove.put("token_id", "");
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransitionExit();
+    }
 
-            mFirestore.collection("Users").document(mAuth.getCurrentUser().getUid()).update(tokenRemove).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    userHelper.deleteContact(1);
-                    mAuth.signOut();
-                    MainActivity.activity.finish();
-                    LoginActivity.startActivityy(ProfileView.this, ProfileView.this);
-                    finish();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.e("Error", e.getMessage());
-                }
-            });
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        overridePendingTransitionEnter();
+    }
 
-        } catch (Exception ex) {
-            Log.e("Logout Error", "Error:" + ex.getMessage());
-        }
+    /**
+     * Overrides the pending Activity transition by performing the "Enter" animation.
+     */
+    protected void overridePendingTransitionEnter() {
+        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+    }
+
+    /**
+     * Overrides the pending Activity transition by performing the "Exit" animation.
+     */
+    protected void overridePendingTransitionExit() {
+        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
+    }
+
+    public void onEditClicked(View view) {
+
+        ProfileEdit.startActivity(this);
+
     }
 }

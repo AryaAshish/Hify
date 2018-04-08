@@ -1,9 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">Hify</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="Welcome_message">Welcome to Hify - Flash Messenger</string>
+    <string name="Welcome_message">Welcome to Hify</string>
     <string name="register_message">Create a new Account</string>
     <string name="loading_name">Loading Name...</string>
 
@@ -23,10 +22,13 @@
     <string name="extras">Extras</string>
     <string name="title_activity_weather">Weather</string>
 
+    <string name="action_panorama">Show panorama</string>
+    <string name="loading_failed">Loading failed. :-(</string>
+    <string name="try_again">Try again</string>
+
     <!-- app. -->
-    <string name="geometric_weather">Geometric Weather</string>
-    <string name="package_name">wangdaye.com.geometricweather</string>
-    <string name="version_code">v2.104</string>
+    <string name="package_name">com.amsavarthan.hify</string>
+    <string name="version_code">v1.6.5</string>
 
     <!-- keyword. -->
     <string name="local">local</string>
@@ -97,8 +99,6 @@
 
     <string name="about_app">ABOUT APP</string>
     <string name="introduce">introduce</string>
-    <string name="email">E-mail</string>
-    <string name="donate">Donate (Alipay)</string>
     <string name="gitHub">GitHub</string>
     <string name="translator">Translators</string>
     <string name="thanks">THX</string>

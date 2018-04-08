@@ -22,6 +22,8 @@ public class UserHelper extends SQLiteOpenHelper {
     public static final String CONTACTS_COLUMN_NAME = "name";
     public static final String CONTACTS_COLUMN_EMAIL = "email";
     public static final String CONTACTS_COLUMN_IMAGE = "image";
+    public static final String CONTACTS_COLUMN_PASS = "password";
+
     private HashMap hp;
 
     public UserHelper(Context context) {
@@ -33,7 +35,7 @@ public class UserHelper extends SQLiteOpenHelper {
         // TODO Auto-generated method stub
         db.execSQL(
                 "create table contacts " +
-                        "(id integer primary key, name text,email text,image text)"
+                        "(id integer primary key, name text,email text,password text,image text)"
         );
     }
 
@@ -44,11 +46,12 @@ public class UserHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertContact(String name, String email, String image) {
+    public boolean insertContact(String name, String email, String image, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("name", name);
         contentValues.put("email", email);
+        contentValues.put("password", password);
         contentValues.put("image", image);
         db.insert("contacts", null, contentValues);
         return true;
@@ -76,12 +79,22 @@ public class UserHelper extends SQLiteOpenHelper {
         return true;
     }
 
+
     public boolean updateContactNameandImage (Integer id, String name, String image) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("name", name);
         contentValues.put("image", image);
         db.update("contacts", contentValues, "id = ? ", new String[] { Integer.toString(id) } );
+        return true;
+    }
+
+    public boolean updateContactNameandEmail(Integer id, String name, String email) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("name", name);
+        contentValues.put("email", email);
+        db.update("contacts", contentValues, "id = ? ", new String[]{Integer.toString(id)});
         return true;
     }
 
@@ -101,6 +114,13 @@ public class UserHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean updateContactEmail(Integer id, String email) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("email", email);
+        db.update("contacts", contentValues, "id = ? ", new String[]{Integer.toString(id)});
+        return true;
+    }
 
     public Integer deleteContact (Integer id) {
         SQLiteDatabase db = this.getWritableDatabase();

@@ -14,15 +14,6 @@
         android:orientation="horizontal"
         android:padding="5dp">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/logo"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:src="@mipmap/logo"
-            android:transitionName="@string/transition_name" />
-
         <TextView
             fontPath="fonts/bold.ttf"
             android:layout_width="match_parent"

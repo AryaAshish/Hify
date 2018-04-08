@@ -21,4 +21,6 @@ public class Config {
 
     public static final String ADMIN_CHANNEL_ID = "admin_id";
     public static final String KEY_REPLY = "key_reply";
+
+    public static final String FIREBASE_AUTH_KEY = "AAAADyWKubA:APA91bHXU3xlkiYE38rgO3Cpivz_TBL3ed4QsC2WjmF_eBtXjRR1pFqBNLiQo6q2y8fi_sACdR6rMKETQDPsCOb5_ASSxEDF8gsyVnFHxc7kJYpq1kQHnaH9pXim_ZGS_FffNrzyyCJs";
 }

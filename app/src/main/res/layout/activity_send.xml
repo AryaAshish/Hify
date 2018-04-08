@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryy"
+    android:paddingTop="30dp"
     tools:context=".ui.activities.SendActivity">
 
   <RelativeLayout
@@ -19,7 +20,7 @@
           android:layout_centerHorizontal="true"
           android:layout_marginTop="30dp"
           android:onClick="PreviewProfileImage"
-          android:src="@mipmap/profile_black"
+          android:src="@drawable/default_user_art_g_2"
           app:civ_border_color="@color/colorPrimaryy"
           app:civ_border_width="1dp" />
 
@@ -32,7 +33,6 @@
           android:layout_marginLeft="30dp"
           android:layout_marginRight="30dp"
           android:layout_marginTop="30dp"
-          android:fontFamily="@font/nunito_semibold"
           android:gravity="center_horizontal"
           android:text="Send Message to :"
           android:textSize="18sp" />
@@ -46,7 +46,6 @@
           android:layout_marginBottom="30dp"
           android:layout_marginLeft="30dp"
           android:layout_marginRight="30dp"
-          android:fontFamily="@font/nunito_semibold"
           android:gravity="center_horizontal"
           android:textColor="#2591FC"
           android:textSize="18sp" />
@@ -62,7 +61,6 @@
              android:id="@+id/imagePreview"
              android:layout_width="match_parent"
              android:layout_height="200dp"
-             android:contentDescription="attachment"
              android:onClick="PreviewImage"
              android:scaleType="centerCrop" />
 
@@ -72,7 +70,6 @@
              android:layout_height="wrap_content"
              android:layout_gravity="bottom"
              android:background="#60000000"
-             android:fontFamily="@font/nunito_semibold"
              android:onClick="RemoveImage"
              android:text="Remove Image"
              android:textAllCaps="false"
@@ -144,7 +141,6 @@
               android:layout_height="wrap_content"
               android:layout_marginTop="15dp"
               android:background="@drawable/button_primary_backgtound"
-              android:fontFamily="@font/nunito_semibold"
               android:padding="10dp"
               android:text="Send"
               android:textAllCaps="false"

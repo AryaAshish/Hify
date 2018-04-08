@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.transition.Fade;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +17,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.amsavarthan.hify.R;
+import com.amsavarthan.hify.ui.extras.Planner.utils.AnimationUtil;
 import com.amsavarthan.hify.utils.database.UserHelper;
 import com.github.javiersantos.bottomdialogs.BottomDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -43,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
     private UserHelper userHelper;
     private ProgressDialog mDialog;
 
-    public static void startActivityy(Context context, Activity activity) {
+    public static void startActivityy(Context context) {
         Intent intent=new Intent(context,LoginActivity.class);
         context.startActivity(intent);
     }
@@ -59,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/Roboto-RobotoRegular.ttf")
+                .setDefaultFontPath("fonts/regular.ttf")
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
@@ -78,125 +81,170 @@ public class LoginActivity extends AppCompatActivity {
         email=(EditText)findViewById(R.id.email);
         password=(EditText)findViewById(R.id.password);
 
-        login=(Button)findViewById(R.id.button);
-        register=(Button)findViewById(R.id.button2);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Fade fade = new Fade();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                fade.excludeTarget(findViewById(R.id.layout), true);
+                fade.excludeTarget(android.R.id.statusBarBackground, true);
+                fade.excludeTarget(android.R.id.navigationBarBackground, true);
+                getWindow().setEnterTransition(fade);
+                getWindow().setExitTransition(fade);
+            }
+        }
 
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+    }
 
-                String email_,pass_;
-                email_=email.getText().toString();
-                pass_=password.getText().toString();
-                if (!TextUtils.isEmpty(email_) && !TextUtils.isEmpty(pass_)) {
-                    mDialog.show();
 
-                    mAuth.signInWithEmailAndPassword(email_,pass_).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()){
+    public void performLogin() {
 
-                                final String token_id = FirebaseInstanceId.getInstance().getToken();
-                                final String current_id = mAuth.getCurrentUser().getUid();
+        final String email_, pass_;
+        email_ = email.getText().toString();
+        pass_ = password.getText().toString();
+        if (!TextUtils.isEmpty(email_) && !TextUtils.isEmpty(pass_)) {
+            mDialog.show();
 
-                                mFirestore.collection("Users").document(current_id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        if (documentSnapshot.getString("token_id").equals("")) {
+            mAuth.signInWithEmailAndPassword(email_, pass_).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
 
-                                            Map<String, Object> tokenMap = new HashMap<>();
-                                            tokenMap.put("token_id", token_id);
+                        final String token_id = FirebaseInstanceId.getInstance().getToken();
+                        final String current_id = mAuth.getCurrentUser().getUid();
 
-                                            mFirestore.collection("Users").document(current_id).update(tokenMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        mFirestore.collection("Users").document(current_id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                if (documentSnapshot.getString("token_id").equals("")) {
+
+                                    Map<String, Object> tokenMap = new HashMap<>();
+                                    tokenMap.put("token_id", token_id);
+
+                                    mFirestore.collection("Users").document(current_id).update(tokenMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+
+                                            FirebaseFirestore.getInstance().collection("Users").document(current_id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                                 @Override
-                                                public void onSuccess(Void aVoid) {
+                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-                                                    FirebaseFirestore.getInstance().collection("Users").document(current_id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                        @Override
-                                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                    userHelper.insertContact(
+                                                            documentSnapshot.getString("name")
+                                                            , documentSnapshot.getString("email")
+                                                            , documentSnapshot.getString("image")
+                                                            , pass_
+                                                    );
 
-                                                            userHelper.insertContact(
-                                                                    documentSnapshot.getString("name")
-                                                                    , documentSnapshot.getString("email")
-                                                                    , documentSnapshot.getString("image")
-                                                            );
-
-                                                            MainActivity.startActivityy(LoginActivity.this);
-                                                            mDialog.dismiss();
-                                                            finish();
-
-                                                        }
-                                                    }).addOnFailureListener(new OnFailureListener() {
-                                                        @Override
-                                                        public void onFailure(@NonNull Exception e) {
-                                                            Log.e("Error", ".." + e.getMessage());
-                                                        }
-                                                    });
+                                                    mDialog.dismiss();
+                                                    MainActivity.startActivity(LoginActivity.this);
+                                                    finish();
 
                                                 }
                                             }).addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
-                                                    mDialog.dismiss();
-                                                    Toast.makeText(LoginActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    Log.e("Error", ".." + e.getMessage());
                                                 }
                                             });
-                                        } else {
-                                            mDialog.dismiss();
-                                            new BottomDialog.Builder(LoginActivity.this)
-                                                    .setTitle("Information")
-                                                    .setContent("This account is being used in another device, please logout from that device and try again.")
-                                                    .setPositiveText("Ok")
-                                                    .setPositiveBackgroundColorResource(R.color.colorAccent)
-                                                    .setCancelable(true)
-                                                    .onPositive(new BottomDialog.ButtonCallback() {
-                                                        @Override
-                                                        public void onClick(@NonNull BottomDialog dialog) {
-                                                            dialog.dismiss();
-                                                        }
-                                                    })
-                                                    .show();
-
-                                            if (mAuth.getCurrentUser() != null) {
-                                                mAuth.signOut();
-                                            }
 
                                         }
-                                    }
-                                });
-
-
-                            } else {
-                                if (task.getException().getMessage().contains("The password is invalid")) {
-                                    Toast.makeText(LoginActivity.this, "Error: The password you have entered is invalid.", Toast.LENGTH_SHORT).show();
-                                    mDialog.dismiss();
-                                } else if (task.getException().getMessage().contains("There is no user record")) {
-                                    Toast.makeText(LoginActivity.this, "Error: Invalid user, Please register using the button below.", Toast.LENGTH_SHORT).show();
-                                    mDialog.dismiss();
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            mDialog.dismiss();
+                                            Toast.makeText(LoginActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                                 } else {
-                                    Toast.makeText(LoginActivity.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                     mDialog.dismiss();
+                                    new BottomDialog.Builder(LoginActivity.this)
+                                            .setTitle("Information")
+                                            .setContent("This account is being used in another device, please logout from that device and try again.")
+                                            .setPositiveText("Ok")
+                                            .setPositiveBackgroundColorResource(R.color.colorAccentt)
+                                            .setCancelable(true)
+                                            .onPositive(new BottomDialog.ButtonCallback() {
+                                                @Override
+                                                public void onClick(@NonNull BottomDialog dialog) {
+                                                    dialog.dismiss();
+                                                }
+                                            })
+                                            .show();
+
+                                    if (mAuth.getCurrentUser() != null) {
+                                        mAuth.signOut();
+                                    }
+
                                 }
-
                             }
+                        });
 
+
+                    } else {
+                        if (task.getException().getMessage().contains("The password is invalid")) {
+                            Toast.makeText(LoginActivity.this, "Error: The password you have entered is invalid.", Toast.LENGTH_SHORT).show();
+                            mDialog.dismiss();
+                        } else if (task.getException().getMessage().contains("There is no user record")) {
+                            Toast.makeText(LoginActivity.this, "Error: Invalid user, Please register using the button below.", Toast.LENGTH_SHORT).show();
+                            mDialog.dismiss();
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            mDialog.dismiss();
                         }
-                    });
 
-                }else{
-                    Toast.makeText(LoginActivity.this, "Invaild details provided", Toast.LENGTH_SHORT).show();
+                    }
 
                 }
+            });
 
-            }
-        });
+        } else if (TextUtils.isEmpty(email_)) {
 
-        register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                RegisterActivity.startActivity(LoginActivity.this);
-            }
-        });
+            AnimationUtil.shakeView(email, this);
+
+        } else if (TextUtils.isEmpty(pass_)) {
+
+            AnimationUtil.shakeView(password, this);
+
+        } else {
+
+            AnimationUtil.shakeView(email, this);
+            AnimationUtil.shakeView(password, this);
+
+        }
 
     }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransitionExit();
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        overridePendingTransitionEnter();
+    }
+
+    /**
+     * Overrides the pending Activity transition by performing the "Enter" animation.
+     */
+    protected void overridePendingTransitionEnter() {
+        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+    }
+
+    /**
+     * Overrides the pending Activity transition by performing the "Exit" animation.
+     */
+    protected void overridePendingTransitionExit() {
+        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
+    }
+
+    public void onLogin(View view) {
+        performLogin();
+    }
+
+    public void onRegister(View view) {
+        RegisterActivity.startActivity(this, this, findViewById(R.id.button));
+    }
+
 }

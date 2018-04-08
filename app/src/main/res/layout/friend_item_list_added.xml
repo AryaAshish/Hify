@@ -48,9 +48,9 @@
             android:id="@+id/image"
             android:layout_width="60dp"
             android:layout_height="80dp"
-            android:src="@mipmap/profile_black"
+            android:src="@drawable/default_user_art_g_2"
             app:civ_border_color="@color/colorPrimaryy"
-            app:civ_border_width="1dp" />
+            app:civ_border_width="0dp" />
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -67,7 +67,6 @@
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/nunito_semibold"
                 android:text="@string/loading_name"
                 android:textColor="#212121"
                 android:textSize="16sp" />
@@ -76,7 +75,6 @@
                 android:id="@+id/email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/nunito_semibold"
                 android:text="Loading email.." />
 
 

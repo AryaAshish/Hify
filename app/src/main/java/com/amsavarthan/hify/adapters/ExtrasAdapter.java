@@ -62,9 +62,9 @@ public class ExtrasAdapter extends RecyclerView.Adapter<ExtrasAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public View mView;
         public ImageView imageView;
-        public TextView title, sub;
+        View mView;
+        TextView title, sub;
 
         public ViewHolder(View itemView) {
             super(itemView);

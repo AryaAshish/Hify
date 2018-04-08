@@ -2,15 +2,16 @@ package com.amsavarthan.hify.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.amsavarthan.hify.ui.activities.Notification.NotificationActivity;
 import com.amsavarthan.hify.R;
 import com.amsavarthan.hify.models.Notification;
+import com.amsavarthan.hify.ui.notification.NotificationActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -29,15 +30,15 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     private List<Notification> notificationList;
     private Context context;
-    private FirebaseFirestore mFirestore;
 
     public NotificationAdapter(List<Notification> notificationList, Context context) {
         this.notificationList = notificationList;
         this.context = context;
     }
 
+    @NonNull
     @Override
-    public NotificationAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public NotificationAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.notification_item_list,parent,false);
 
@@ -45,9 +46,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     @Override
-    public void onBindViewHolder(final NotificationAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final NotificationAdapter.ViewHolder holder, int position) {
 
-        mFirestore=FirebaseFirestore.getInstance();
+        FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
 
         holder.message.setText(notificationList.get(position).getMessage());
 
@@ -59,11 +60,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 name=documentSnapshot.getString("name");
                 image=documentSnapshot.getString("image");
 
-                RequestOptions placeholderOprions=new RequestOptions();
-                placeholderOprions.placeholder(context.getResources().getDrawable(R.mipmap.profile_black));
-
                 Glide.with(context)
-                        .setDefaultRequestOptions(placeholderOprions)
+                        .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.default_user_art_g_2))
                         .load(image)
                         .into(holder.image);
 
@@ -73,8 +71,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     @Override
                     public void onClick(View view) {
                         Intent intent=new Intent(context, NotificationActivity.class);
-                        intent.putExtra("from_id",notificationList.get(position).getFrom());
-                        intent.putExtra("message",notificationList.get(position).getMessage());
+                        intent.putExtra("from_id", notificationList.get(holder.getAdapterPosition()).getFrom());
+                        intent.putExtra("message", notificationList.get(holder.getAdapterPosition()).getMessage());
                         intent.putExtra("image",image);
                         intent.putExtra("name",name);
                         context.startActivity(intent);
@@ -103,9 +101,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             super(itemView);
 
             mView=itemView;
-            image=(CircleImageView)mView.findViewById(R.id.image);
-            from=(TextView)mView.findViewById(R.id.name);
-            message=(TextView)mView.findViewById(R.id.message);
+            image = mView.findViewById(R.id.image);
+            from = mView.findViewById(R.id.name);
+            message = mView.findViewById(R.id.message);
 
         }
     }

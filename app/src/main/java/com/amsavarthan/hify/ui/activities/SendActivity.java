@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.amsavarthan.hify.R;
+import com.amsavarthan.hify.ui.extras.Planner.utils.AnimationUtil;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -46,7 +47,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.theartofdev.edmodo.cropper.CropImage;
+import com.yalantis.ucrop.UCrop;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -129,7 +130,7 @@ public class SendActivity extends AppCompatActivity {
 
         mFirestore=FirebaseFirestore.getInstance();
         user_id=getIntent().getStringExtra("userId");
-        current_id= FirebaseAuth.getInstance().getUid();
+        current_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
         storageReference= FirebaseStorage.getInstance().getReference().child("notification").child(random()+".jpg");
 
         username=(TextView)findViewById(R.id.user_name);
@@ -149,11 +150,8 @@ public class SendActivity extends AppCompatActivity {
 
                 image_=documentSnapshot.getString("image");
 
-                RequestOptions requestOptions=new RequestOptions();
-                requestOptions.placeholder(getResources().getDrawable(R.mipmap.profile_black));
-
                 Glide.with(SendActivity.this)
-                        .setDefaultRequestOptions(requestOptions)
+                        .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.default_user_art_g_2))
                         .load(image_)
                         .into(image);
 
@@ -177,8 +175,8 @@ public class SendActivity extends AppCompatActivity {
                         Map<String,Object> notificationMessage=new HashMap<>();
                         notificationMessage.put("message",message_);
                         notificationMessage.put("from",current_id);
-                        notificationMessage.put("notification_id", (int) System.currentTimeMillis());
-                        notificationMessage.put("timestamp", (int) System.currentTimeMillis());
+                        notificationMessage.put("notification_id", String.valueOf(System.currentTimeMillis()));
+                        notificationMessage.put("timestamp", String.valueOf(System.currentTimeMillis()));
 
                         mFirestore.collection("Users/"+user_id+"/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                             @Override
@@ -223,6 +221,7 @@ public class SendActivity extends AppCompatActivity {
 
                                         Toast.makeText(SendActivity.this, "Hify sent!", Toast.LENGTH_SHORT).show();
                                         message.setText("");
+                                        imageLayout.setVisibility(View.GONE);
                                         mDialog.dismiss();
 
                                     }
@@ -247,7 +246,7 @@ public class SendActivity extends AppCompatActivity {
 
 
                 }else{
-                    Toast.makeText(SendActivity.this, "Enter some message to send.", Toast.LENGTH_SHORT).show();
+                    AnimationUtil.shakeView(message, SendActivity.this);
                 }
 
             }
@@ -289,8 +288,8 @@ public class SendActivity extends AppCompatActivity {
                            PlacePhotoResponse photo = task.getResult();
                            Bitmap bitmap = photo.getBitmap();
                            imageLayout.setVisibility(View.VISIBLE);
-                           imageUri = saveImageandGetUri(bitmap);
-                           Toast.makeText(SendActivity.this, saveImageandGetUri(bitmap).toString(), Toast.LENGTH_SHORT).show();
+                           imageUri = getImageUri(SendActivity.this, bitmap);
+                           imagePreview.setImageURI(getImageUri(SendActivity.this, bitmap));
                        }
                    });
                }catch (Exception ex){
@@ -389,8 +388,16 @@ public class SendActivity extends AppCompatActivity {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 imageUri=data.getData();
-                                CropImage.activity(imageUri)
+                                //start crop activity
+                                UCrop.Options options = new UCrop.Options();
+                                options.setCompressionFormat(Bitmap.CompressFormat.PNG);
+                                options.setCompressionQuality(100);
+                                options.setShowCropGrid(true);
+
+                                UCrop.of(imageUri, Uri.fromFile(new File(getCacheDir(), String.format("hify_%s.png", random()))))
+                                        .withOptions(options)
                                         .start(SendActivity.this);
+
                                 dialog.dismiss();
                             }
                         }).onNegative(new MaterialDialog.SingleButtonCallback() {
@@ -405,14 +412,13 @@ public class SendActivity extends AppCompatActivity {
             }
         }
 
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+        if (requestCode == UCrop.REQUEST_CROP) {
             if (resultCode == RESULT_OK) {
+                imageUri = UCrop.getOutput(data);
                 imageLayout.setVisibility(View.VISIBLE);
-                imageUri= result.getUri();
                 imagePreview.setImageURI(imageUri);
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                Exception error = result.getError();
+            } else if (resultCode == UCrop.RESULT_ERROR) {
+                Log.e("Error", "Crop error:" + UCrop.getError(data).getMessage());
             }
         }
 
@@ -476,4 +482,32 @@ public class SendActivity extends AppCompatActivity {
         }
 
     }
+
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransitionExit();
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        overridePendingTransitionEnter();
+    }
+
+    /**
+     * Overrides the pending Activity transition by performing the "Enter" animation.
+     */
+    protected void overridePendingTransitionEnter() {
+        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+    }
+
+    /**
+     * Overrides the pending Activity transition by performing the "Exit" animation.
+     */
+    protected void overridePendingTransitionExit() {
+        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
+    }
+
 }

@@ -1,11 +1,9 @@
 package com.amsavarthan.hify.ui.activities;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -39,6 +37,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class AddFriends extends AppCompatActivity {
 
+    public static FloatingActionButton fab;
     private RecyclerView mRecyclerView;
     private List<Friends> usersList;
     private AddFriendAdapter usersAdapter;
@@ -50,7 +49,7 @@ public class AddFriends extends AppCompatActivity {
     private ListenerRegistration mRegistration;
     private Query mQuery;
     private String id;
-    private ProgressDialog mDialog;
+    private boolean fab_visible = true;
 
     public static void startActivity(Context context) {
         Intent intent = new Intent(context, AddFriends.class);
@@ -80,6 +79,7 @@ public class AddFriends extends AppCompatActivity {
 
                         for (final DocumentChange doc : documentSnapshots.getDocumentChanges()) {
                             if (doc.getType() == DocumentChange.Type.ADDED) {
+
                                 firestore.collection("Users")
                                         .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                         .collection("Friends")
@@ -90,33 +90,22 @@ public class AddFriends extends AppCompatActivity {
                                                 if (!documentSnapshot.exists()) {
                                                     if (!doc.getDocument().getId().equals(FirebaseAuth.getInstance()
                                                             .getCurrentUser().getUid())) {
-                                                        Log.i("Users not as friend", doc.getDocument().getString("name"));
-                                                        Log.i("id not as friend", doc.getDocument().getId());
-                                                        Friends friends = new Friends(
-                                                                doc.getDocument().getId(),
-                                                                doc.getDocument().getString("name"),
-                                                                doc.getDocument().getString("image"),
-                                                                doc.getDocument().getString("email"),
-                                                                doc.getDocument().getString("token_id"));
+                                                        Friends friends = doc.getDocument().toObject(Friends.class).withId(doc.getDocument().getString("id"));
                                                         usersList.add(friends);
-                                                        usersAdapter.notifyItemInserted(usersList.size() - 1);
+                                                        usersAdapter.notifyDataSetChanged();
                                                     }
-                                                } else {
-                                                    Log.i("Users as friend", documentSnapshot.getString("name"));
                                                 }
                                             }
                                         });
+
                             }
                         }
-                        mDialog.dismiss();
+
+
                     }
                 });
             }
 
-            mRecyclerView.animate()
-                    .translationY(mRecyclerView.getHeight())
-                    .alpha(1.0f)
-                    .setDuration(500);
 
         } catch (Exception e) {
             Log.e("Error: ", ".." + e.getLocalizedMessage());
@@ -128,19 +117,46 @@ public class AddFriends extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         stopListening();
+        overridePendingTransitionExit();
     }
 
     public void getUsers() {
-        mDialog.show();
         usersList.clear();
         mQuery = firestore.collection("Users");
         startListening();
-
     }
+
 
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransitionExit();
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        overridePendingTransitionEnter();
+    }
+
+    /**
+     * Overrides the pending Activity transition by performing the "Enter" animation.
+     */
+    protected void overridePendingTransitionEnter() {
+        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+    }
+
+    /**
+     * Overrides the pending Activity transition by performing the "Exit" animation.
+     */
+    protected void overridePendingTransitionExit() {
+        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
     }
 
     @Override
@@ -149,21 +165,17 @@ public class AddFriends extends AppCompatActivity {
         setContentView(R.layout.activity_add_friends);
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/regular.ttf")
+                .setDefaultFontPath("fonts/regular.tf")
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
 
-        mDialog = new ProgressDialog(this);
-        mDialog.setMessage("Please wait..");
-        mDialog.setIndeterminate(true);
-        mDialog.setCanceledOnTouchOutside(false);
-        mDialog.setCancelable(false);
 
         firestore = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
         mRecyclerView = (RecyclerView)findViewById(R.id.usersList);
+        fab = findViewById(R.id.searchFab);
 
         itemTouchHelperCallback = new RecyclerViewTouchHelper(0, ItemTouchHelper.LEFT, new RecyclerViewTouchHelper.RecyclerItemTouchHelperListener() {
             @Override
@@ -186,8 +198,6 @@ public class AddFriends extends AppCompatActivity {
             }
         });
 
-        mRecyclerView.setVisibility(View.VISIBLE);
-        mRecyclerView.setAlpha(0.0f);
         usersList = new ArrayList<>();
         usersAdapter = new AddFriendAdapter(usersList, this, findViewById(R.id.layout));
 
@@ -206,19 +216,11 @@ public class AddFriends extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         stopListening();
-        mRecyclerView.animate()
-                .translationY(0)
-                .alpha(0.0f)
-                .setDuration(500)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-                        finish();
-                    }
-                });
-
+        finish();
+        overridePendingTransitionExit();
     }
 
-
+    public void gotoSearch(View view) {
+        SearchUsersActivity.startActivity(this, this, fab);
+    }
 }

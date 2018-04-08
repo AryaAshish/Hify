@@ -1,6 +1,8 @@
 package com.amsavarthan.hify.adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +11,6 @@ import android.view.ViewGroup;
 import com.amsavarthan.hify.R;
 import com.amsavarthan.hify.models.FriendRequest;
 import com.amsavarthan.hify.ui.activities.FriendRequestActivty;
-import com.amsavarthan.hify.ui.activities.FriendsView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -23,27 +24,28 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdapter.ViewHolder> {
 
-    private List<FriendRequest> usersList;
+    public static Activity activity;
     private Context context;
-    private ViewHolder holderr;
-    private String userId;
+    private List<FriendRequest> usersList;
 
-    public FriendRequestAdapter(List<FriendRequest> usersList, Context context) {
+    public FriendRequestAdapter(List<FriendRequest> usersList, Context context, Activity activity) {
         this.usersList = usersList;
         this.context = context;
+        this.activity = activity;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.friend_req_item, parent, false);
 
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
 
-        final String id = usersList.get(position).getId();
+        final String id = usersList.get(position).userId;
         final String name = usersList.get(position).getName();
         final String email = usersList.get(position).getEmail();
         final String image = usersList.get(position).getImage();
@@ -51,7 +53,7 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
 
 
         Glide.with(context)
-                .setDefaultRequestOptions(new RequestOptions().placeholder(context.getResources().getDrawable(R.mipmap.profile_black)))
+                .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.default_user_art_g_2))
                 .load(image)
                 .into(holder.image);
 
@@ -60,7 +62,6 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
             public void onClick(View view) {
                 //send user data as intent extras to FriendRequestActivity
                 FriendRequestActivty.startActivity(context, name, email, image, id, token);
-                FriendsView.activity.finish();
             }
         });
 
@@ -79,7 +80,7 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
         public ViewHolder(View itemView) {
             super(itemView);
 
-            image = (CircleImageView) itemView.findViewById(R.id.userimage);
+            image = itemView.findViewById(R.id.userimage);
 
 
         }

@@ -10,7 +10,7 @@
         android:layout_height="90dp"
         android:clickable="true"
         android:focusable="true"
-        android:src="@mipmap/profile_black" />
+        android:src="@drawable/default_user_art_g_2" />
 
 
 </RelativeLayout>

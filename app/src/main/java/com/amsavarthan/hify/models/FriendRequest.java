@@ -6,17 +6,25 @@ package com.amsavarthan.hify.models;
 
 public class FriendRequest extends UserId {
 
-    private String id, name, image, email, token;
+    private String id, name, email, image, token;
 
     public FriendRequest() {
     }
 
-    public FriendRequest(String id, String name, String image, String email, String token) {
+    public FriendRequest(String id, String name, String image, String token, String email) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.email = email;
         this.token = token;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getId() {
@@ -41,14 +49,6 @@ public class FriendRequest extends UserId {
 
     public void setImage(String image) {
         this.image = image;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getToken() {
