@@ -2,9 +2,9 @@
 
 ![alt_text](https://github.com/lvamsavarthan/Hify/blob/master/preview.png) 
 
-A new type of messenger. This app is still in **beta** and lacks some features.
+Just a social app. This app is still in **beta** and lacks some features.
 
-**google-services.json file has been deleted for security reasons**
+**google-services.json file has been deleted for security reasons. Place your google-services.json in /app folder**
 
 ## Available feautres
 
@@ -14,19 +14,19 @@ A new type of messenger. This app is still in **beta** and lacks some features.
   - Instant messaging using notifications using firebase functions **(stable)**
 * Make new friends
   - Friend request and accepted notifications **(stable)**
-  - Manage friends **(slightly stable)**
+  - Manage friends **(stable)**
 * Profile
   - Manage your profile either online or offline **(stable)**
 * Messages
   - Send only text **(stable)**
   - Send image and text **(stable)**
   - Send location **(stable)**
+* Posts Feed
+  - View posts of your friends **(slightly stable)**
+  - Like,Share,Comment,Add to Loved,Add to Favourites in that post **(slightly stable)**
 
-## In development features
+## In development features (TO-DO)
 
-* News Feed
-  - View posts of your friends **(unstable)**
-  - Like,Share,Comment **(unstable)**
 * Profile
   - More settings **(yet to)**
   - Security options **(yet to)**
@@ -34,10 +34,18 @@ A new type of messenger. This app is still in **beta** and lacks some features.
   - Chat with your friends either in private or group **(yet to)**
 * Messages
   - Send group messages **(unstable)**
+* Encryption
+  - Encrypt user data
 
 ## Screenshots
 
 ....
+
+## Author
+
+This whole project is maintained only by **Amsavarthan Lv (me)**.
+
+If you like to contribute, please let me know
 
 ## Credits
 
