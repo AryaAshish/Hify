@@ -1,6 +1,6 @@
 # Hify
 
-![alt_text](https://github.com/lvamsavarthan/Hify/blob/master/preview.png) 
+![hify_logo](https://github.com/lvamsavarthan/Hify/blob/master/preview.png) 
 
 Just a social app. This app is still in **beta** and lacks some features.
 
