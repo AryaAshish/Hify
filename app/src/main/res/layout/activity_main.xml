@@ -4,21 +4,21 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f8f8f8"
+    android:background="#FFF"
     android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:elevation="0dp">
+        >
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
-            fontPath="fonts/bold.ttf"
+            app:title="Dashboard"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:background="#f8f8f8"
-            android:paddingTop="25dp" />
+            android:layout_height="wrap_content"
+            android:background="#FFF"
+            />
 
     </android.support.design.widget.AppBarLayout>
 

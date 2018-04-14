@@ -6,9 +6,8 @@
     android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_6"
-    android:paddingTop="30dp"
-    tools:context=".ui.activities.ProfileEdit">
+    android:background="@drawable/gradient_4"
+    tools:context=".ui.activities.account.ProfileEdit">
 
     <View
         android:layout_width="match_parent"
@@ -93,7 +92,8 @@
                         android:background="@drawable/input_light_white"
                         android:ems="10"
                         android:hint="Email"
-                        android:inputType="textEmailAddress"
+                        android:enabled="false"
+                        android:inputType="none"
                         android:paddingBottom="15dp"
                         android:paddingEnd="25dp"
                         android:paddingLeft="25dp"
@@ -103,6 +103,7 @@
 
 
                     <TextView
+                        android:visibility="gone"
                         android:id="@+id/changePass"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -126,7 +127,7 @@
                         android:onClick="onUpdateClick"
                         android:padding="16dp"
                         android:src="@drawable/ic_done_white_24dp"
-                        app:backgroundTint="#FFA26E" />
+                        app:backgroundTint="#b224ef" />
 
                 </RelativeLayout>
 

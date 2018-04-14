@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#FFF"
     android:orientation="vertical"
-    tools:context="com.amsavarthan.hify.ui.activities.PostText">
+    tools:context="com.amsavarthan.hify.ui.activities.post.PostText">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryy"
-    tools:context="com.amsavarthan.hify.ui.activities.MessagesView">
+    tools:context="com.amsavarthan.hify.ui.activities.friends.MessagesView">
 
     <LinearLayout
         android:id="@+id/appbar"

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_2"
-    tools:context=".ui.activities.LoginActivity">
+    tools:context=".ui.activities.account.LoginActivity">
 
     <View
         android:layout_width="match_parent"
@@ -133,15 +133,14 @@
                 </RelativeLayout>
 
 
-                <de.hdodenhof.circleimageview.CircleImageView
+                <ImageView
                     android:id="@+id/profile_image"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="25dp"
-                    android:src="@drawable/profile_pic"
-                    app:civ_border_color="#ffffff"
-                    app:civ_border_width="0dp" />
+                    android:src="@mipmap/logo"
+                    />
 
             </FrameLayout>
 

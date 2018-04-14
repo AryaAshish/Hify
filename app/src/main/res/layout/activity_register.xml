@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_2"
-    tools:context=".ui.activities.RegisterActivity">
+    tools:context=".ui.activities.account.RegisterActivity">
 
     <View
         android:layout_width="match_parent"
