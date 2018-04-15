@@ -1,6 +1,4 @@
-# Hify
-
-![hify_logo](https://github.com/lvamsavarthan/Hify/blob/master/preview.png)
+<img src="https://github.com/lvamsavarthan/Hify/blob/master/preview.png" width="250" height="250">
 
 Social networking like app using firebase. This app is still in **beta** and lacks some features.
 
