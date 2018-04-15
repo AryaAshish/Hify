@@ -1,5 +1,7 @@
 # Hify
 
+![hify_logo](https://github.com/lvamsavarthan/Hify/blob/master/preview.png)
+
 Social networking like app using firebase. This app is still in **beta** and lacks some features.
 
 **google-services.json file has been deleted for security reasons. Place your google-services.json in /app folder**
@@ -37,7 +39,7 @@ Social networking like app using firebase. This app is still in **beta** and lac
 
 ## Screenshots
 
-....
+Visit [projects's wiki](http://www.google.com)
 
 ## Author
 
