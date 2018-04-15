@@ -39,7 +39,7 @@ Social networking like app using firebase. This app is still in **beta** and lac
 
 ## Screenshots
 
-Visit [projects's wiki](http://www.google.com)
+Visit [projects's wiki](https://github.com/lvamsavarthan/Hify/wiki) for screenshots
 
 ## Author
 
@@ -47,6 +47,6 @@ This whole project is maintained only by **Amsavarthan Lv (me)**.
 
 If you like to contribute, please let me know
 
-## Credits
+## Thanks to
 
 Logo designed by Live Mail Team from Uplabs.com
