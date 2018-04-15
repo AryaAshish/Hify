@@ -17,7 +17,7 @@
   - Send image and text **(stable)**
   - Send location **(stable)**
 * Posts Feed
-  - View posts of your friends **(slightly stable)**
+  - View posts of your friends **(stable)**
   - Like,Share,Comment,Add to Loved,Add to Favourites in that post **(slightly stable)**
 
 ## In development features (TO-DO)
@@ -30,7 +30,7 @@
 * Messages
   - Send group messages **(unstable)**
 * Encryption
-  - Encrypt user data
+  - Encrypt user data **(yet to)**
 
 ## Screenshots
 
